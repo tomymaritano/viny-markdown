@@ -70,7 +70,7 @@ async function initSqlJsDatabase(): Promise<Database> {
   if (db) return db;
 
   const SQL = await initSqlJs({
-    locateFile: (file) => `https://sql.js.org/dist/${file}`,
+    locateFile: (file: string) => `https://sql.js.org/dist/${file}`,
   });
 
   // Try to load from localStorage
@@ -135,7 +135,7 @@ export async function dbExecute(sql: string, params: unknown[] = []): Promise<{ 
  * Query the database (SELECT)
  * Returns array of objects with column names as keys
  */
-export async function dbSelect<T extends Record<string, unknown>>(sql: string, params: unknown[] = []): Promise<T[]> {
+export async function dbSelect<T>(sql: string, params: unknown[] = []): Promise<T[]> {
   if (!initialized) {
     await initDatabase();
   }
@@ -149,9 +149,9 @@ export async function dbSelect<T extends Record<string, unknown>>(sql: string, p
     if (!result.length || !result[0].values.length) return [];
 
     const columns = result[0].columns;
-    return result[0].values.map((row) => {
+    return result[0].values.map((row: unknown[]) => {
       const obj: Record<string, unknown> = {};
-      columns.forEach((col, i) => {
+      columns.forEach((col: string, i: number) => {
         obj[col] = row[i];
       });
       return obj as T;
