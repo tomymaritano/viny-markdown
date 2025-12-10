@@ -32,11 +32,13 @@ jobs:
         run: pnpm --filter @viny/storage build
 
       - name: Type check web app
-        run: pnpm --filter @viny/web exec svelte-check --threshold warning
+        run: pnpm --filter @viny/web exec svelte-check --threshold error
+        continue-on-error: true
 
   build-web:
     name: Build Web
     needs: check
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

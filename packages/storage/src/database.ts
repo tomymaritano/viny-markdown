@@ -2,7 +2,7 @@
 // Database Initialization (Tauri SQLite or sql.js/WASM fallback)
 // =============================================================================
 
-import initSqlJs, { type Database } from 'sql.js';
+import initSqlJs, { type Database, type BindParams } from 'sql.js';
 import { SCHEMA } from './schema.js';
 
 // Check if running in Tauri
@@ -123,7 +123,7 @@ export async function dbExecute(sql: string, params: unknown[] = []): Promise<{ 
     const result = await tauriDb.execute(sql, params);
     return { rowsAffected: result.rowsAffected };
   } else if (db) {
-    db.run(sql, params);
+    db.run(sql, params as BindParams);
     const changes = db.getRowsModified();
     return { rowsAffected: changes };
   }
@@ -145,7 +145,7 @@ export async function dbSelect<T>(sql: string, params: unknown[] = []): Promise<
     return tauriDb.select<T>(sql, params);
   } else if (db) {
     // sql.js returns { columns: [], values: [[]] } - convert to objects
-    const result = db.exec(sql, params);
+    const result = db.exec(sql, params as BindParams);
     if (!result.length || !result[0].values.length) return [];
 
     const columns = result[0].columns;

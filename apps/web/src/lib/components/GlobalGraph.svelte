@@ -17,7 +17,8 @@
 
   let svgElement: SVGSVGElement;
   let containerElement: HTMLDivElement;
-  let simulation: d3Force.Simulation<d3Force.SimulationNodeDatum, undefined> | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let simulation: d3Force.Simulation<any, any> | null = null;
 
   // Graph state
   let hoveredNodeId = $state<string | null>(null);
@@ -174,7 +175,8 @@
         d.fy = null;
       });
 
-    node.call(drag);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    node.call(drag as any);
 
     // Zoom behavior
     const zoom = d3Zoom

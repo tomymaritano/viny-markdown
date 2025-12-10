@@ -45,6 +45,7 @@
 </script>
 
 {#if open && note && stats()}
+  {@const noteStats = stats()!}
   <div
     class="panel-backdrop"
     onclick={handleBackdropClick}
@@ -68,27 +69,27 @@
           <dl class="stats-grid">
             <div class="stat-item">
               <dt>Words</dt>
-              <dd>{formatNumber(stats().wordCount)}</dd>
+              <dd>{formatNumber(noteStats.wordCount)}</dd>
             </div>
             <div class="stat-item">
               <dt>Characters</dt>
-              <dd>{formatNumber(stats().characterCount)}</dd>
+              <dd>{formatNumber(noteStats.characterCount)}</dd>
             </div>
             <div class="stat-item">
               <dt>Characters (no spaces)</dt>
-              <dd>{formatNumber(stats().characterCountNoSpaces)}</dd>
+              <dd>{formatNumber(noteStats.characterCountNoSpaces)}</dd>
             </div>
             <div class="stat-item">
               <dt>Lines</dt>
-              <dd>{formatNumber(stats().lineCount)}</dd>
+              <dd>{formatNumber(noteStats.lineCount)}</dd>
             </div>
             <div class="stat-item">
               <dt>Paragraphs</dt>
-              <dd>{formatNumber(stats().paragraphCount)}</dd>
+              <dd>{formatNumber(noteStats.paragraphCount)}</dd>
             </div>
             <div class="stat-item">
               <dt>Reading time</dt>
-              <dd>{stats().readingTime}</dd>
+              <dd>{noteStats.readingTime}</dd>
             </div>
           </dl>
         </section>
@@ -98,11 +99,11 @@
           <dl class="stats-grid">
             <div class="stat-item">
               <dt>Outgoing links</dt>
-              <dd>{formatNumber(stats().linkCount)}</dd>
+              <dd>{formatNumber(noteStats.linkCount)}</dd>
             </div>
             <div class="stat-item">
               <dt>Backlinks</dt>
-              <dd>{formatNumber(stats().backlinkCount)}</dd>
+              <dd>{formatNumber(noteStats.backlinkCount)}</dd>
             </div>
           </dl>
         </section>
@@ -112,11 +113,11 @@
           <dl class="dates-list">
             <div class="date-item">
               <dt>Created</dt>
-              <dd>{formatDate(stats().createdAt)}</dd>
+              <dd>{formatDate(noteStats.createdAt)}</dd>
             </div>
             <div class="date-item">
               <dt>Modified</dt>
-              <dd>{formatDate(stats().updatedAt)}</dd>
+              <dd>{formatDate(noteStats.updatedAt)}</dd>
             </div>
           </dl>
         </section>
