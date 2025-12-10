@@ -136,6 +136,8 @@ async function createNotebook(name: string, parentId: string | null = null) {
   // Log operation for sync
   await operationsStore.logNotebookCreated(notebook.id, {
     name: notebook.name,
+    color: notebook.color,
+    icon: notebook.icon,
     parentId: notebook.parentId,
   });
 
