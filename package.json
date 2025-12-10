@@ -1,0 +1,21 @@
+{
+  "name": "viny-next",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:web": "pnpm --filter @viny/web dev",
+    "dev:desktop": "pnpm --filter @viny/desktop dev",
+    "build:web": "pnpm --filter @viny/web build",
+    "build:desktop": "pnpm --filter @viny/desktop build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  }
+}
