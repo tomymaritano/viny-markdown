@@ -50,14 +50,13 @@ jobs:
           draft: true
           prerelease: false
 
+  # Build for Windows and Linux
   build-tauri:
     needs: create-release
     strategy:
       fail-fast: false
       matrix:
         include:
-          - platform: macos-latest
-            args: --target universal-apple-darwin
           - platform: ubuntu-22.04
             args: ''
           - platform: windows-latest
@@ -79,8 +78,6 @@ jobs:
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
@@ -100,21 +97,106 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # macOS code signing
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: "Developer ID Application: Tomas Maritano (CB8LJYCJ3T)"
-          # macOS notarization
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           projectPath: './apps/desktop'
           releaseId: ${{ needs.create-release.outputs.release_id }}
           args: ${{ matrix.args }}
 
+  # macOS build with manual notarization and retries
+  build-macos:
+    needs: create-release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './apps/desktop/src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: pnpm install
+
+      - name: Import Apple certificate
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          echo "$APPLE_CERTIFICATE" | base64 --decode > certificate.p12
+          security create-keychain -p actions build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p actions build.keychain
+          security import certificate.p12 -k build.keychain -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k actions build.keychain
+          rm certificate.p12
+
+      - name: Build Tauri app (with signing, without notarization)
+        env:
+          APPLE_SIGNING_IDENTITY: "Developer ID Application: Tomas Maritano (CB8LJYCJ3T)"
+        run: |
+          cd apps/desktop
+          pnpm tauri build --target universal-apple-darwin
+
+      - name: Notarize with retries
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          DMG_PATH=$(find apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
+          echo "Found DMG: $DMG_PATH"
+
+          MAX_RETRIES=5
+          RETRY_DELAY=60
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Notarization attempt $i of $MAX_RETRIES..."
+
+            if xcrun notarytool submit "$DMG_PATH" \
+              --apple-id "$APPLE_ID" \
+              --password "$APPLE_PASSWORD" \
+              --team-id "$APPLE_TEAM_ID" \
+              --wait \
+              --timeout 30m; then
+              echo "Notarization successful!"
+              xcrun stapler staple "$DMG_PATH"
+              echo "Stapling complete!"
+              break
+            else
+              if [ $i -eq $MAX_RETRIES ]; then
+                echo "Notarization failed after $MAX_RETRIES attempts"
+                exit 1
+              fi
+              echo "Attempt $i failed, waiting ${RETRY_DELAY}s before retry..."
+              sleep $RETRY_DELAY
+            fi
+          done
+
+      - name: Upload to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DMG_PATH=$(find apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
+          gh release upload "${{ github.ref_name }}" "$DMG_PATH" --clobber
+
   publish-release:
-    needs: [create-release, build-tauri]
+    needs: [create-release, build-tauri, build-macos]
     runs-on: ubuntu-latest
     steps:
       - name: Publish release
