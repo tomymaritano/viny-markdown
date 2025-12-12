@@ -146,20 +146,54 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k actions build.keychain
           rm certificate.p12
 
-      - name: Build Tauri app (with signing, without notarization)
+      - name: Resolve signing identity
+        id: signing-identity
         env:
-          APPLE_SIGNING_IDENTITY: "Developer ID Application: Tomas Maritano (CB8LJYCJ3T)"
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
         run: |
+          set -euo pipefail
+          if [ -n "${APPLE_SIGNING_IDENTITY:-}" ]; then
+            echo "Using signing identity from secret"
+            echo "identity=${APPLE_SIGNING_IDENTITY}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          IDENTITY=$(security find-identity -v -p codesigning | awk '/Developer ID Application/ {print $2; exit}')
+          if [ -z "$IDENTITY" ]; then
+            echo "No Developer ID Application identity found in the keychain"
+            exit 1
+          fi
+
+          echo "Detected signing identity: $IDENTITY"
+          echo "identity=$IDENTITY" >> "$GITHUB_OUTPUT"
+
+      - name: Build Tauri app (with signing, without notarization)
+        id: build-macos-artifact
+        env:
+          APPLE_SIGNING_IDENTITY: ${{ steps.signing-identity.outputs.identity }}
+        run: |
+          set -euo pipefail
           cd apps/desktop
           pnpm tauri build --target universal-apple-darwin
+
+          DMG_PATH=$(find src-tauri/target/universal-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
+          if [ -z "$DMG_PATH" ]; then
+            echo "DMG not found after build"
+            exit 1
+          fi
+
+          DMG_PATH=$(realpath "$DMG_PATH")
+          echo "Built DMG at $DMG_PATH"
+          echo "dmg_path=$DMG_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Notarize with retries
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          DMG_PATH: ${{ steps.build-macos-artifact.outputs.dmg_path }}
         run: |
-          DMG_PATH=$(find apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
+          set -euo pipefail
           echo "Found DMG: $DMG_PATH"
 
           MAX_RETRIES=5
@@ -191,8 +225,8 @@ jobs:
       - name: Upload to release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DMG_PATH: ${{ steps.build-macos-artifact.outputs.dmg_path }}
         run: |
-          DMG_PATH=$(find apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
           gh release upload "${{ github.ref_name }}" "$DMG_PATH" --clobber
 
   publish-release:
