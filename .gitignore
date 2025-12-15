@@ -34,3 +34,15 @@ coverage/
 
 # Tauri
 src-tauri/target/
+
+# Certificates and keys (sensitive)
+*.p12
+*.pem
+*.key
+*.cer
+*.csr
+*.certSigningRequest
+CertificateSigningRequest.certSigningRequest
+
+# Generated Tauri files
+apps/desktop/src-tauri/gen/

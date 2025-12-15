@@ -4,10 +4,10 @@
   "version": "0.1.0",
   "identifier": "com.viny.app",
   "build": {
-    "beforeDevCommand": "cd ../../ && pnpm --filter @viny/web dev",
-    "devUrl": "http://localhost:5173",
-    "beforeBuildCommand": "cd ../../ && pnpm --filter @viny/web build",
-    "frontendDist": "../../web/build"
+    "beforeDevCommand": "pnpm vite dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm vite build",
+    "frontendDist": "../dist"
   },
   "app": {
     "withGlobalTauri": true,
