@@ -114,7 +114,7 @@
     aria-labelledby="shortcuts-title"
     tabindex="-1"
   >
-    <div class="modal" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
+    <div class="modal" role="document" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
       <header class="modal-header">
         <h2 id="shortcuts-title">Keyboard Shortcuts</h2>
         <div class="header-actions">

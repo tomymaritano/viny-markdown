@@ -223,8 +223,9 @@
       </div>
 
       <div class="filter-group">
-        <label class="filter-label">Notebook</label>
+        <label class="filter-label" for="filter-notebook">Notebook</label>
         <select
+          id="filter-notebook"
           class="filter-select"
           value={filterNotebook ?? ''}
           onchange={(e) => filterNotebook = (e.target as HTMLSelectElement).value || null}
@@ -237,8 +238,9 @@
       </div>
 
       <div class="filter-group">
-        <label class="filter-label">Tag</label>
+        <label class="filter-label" for="filter-tag">Tag</label>
         <select
+          id="filter-tag"
           class="filter-select"
           value={filterTag ?? ''}
           onchange={(e) => filterTag = (e.target as HTMLSelectElement).value || null}
@@ -251,7 +253,7 @@
       </div>
 
       <div class="filter-group">
-        <label class="filter-label">Date modified</label>
+        <span class="filter-label">Date modified</span>
         <div class="filter-chips">
           <button
             class="filter-chip"

@@ -216,44 +216,44 @@
     {#if showSettings}
       <div class="settings-panel">
         <div class="setting-row">
-          <label>Work duration</label>
+          <label for="pomodoro-work">Work duration</label>
           <div class="setting-input">
-            <input type="number" min="1" max="60" bind:value={workDuration} onchange={saveSettings} />
+            <input id="pomodoro-work" type="number" min="1" max="60" bind:value={workDuration} onchange={saveSettings} />
             <span>min</span>
           </div>
         </div>
         <div class="setting-row">
-          <label>Short break</label>
+          <label for="pomodoro-short">Short break</label>
           <div class="setting-input">
-            <input type="number" min="1" max="30" bind:value={shortBreakDuration} onchange={saveSettings} />
+            <input id="pomodoro-short" type="number" min="1" max="30" bind:value={shortBreakDuration} onchange={saveSettings} />
             <span>min</span>
           </div>
         </div>
         <div class="setting-row">
-          <label>Long break</label>
+          <label for="pomodoro-long">Long break</label>
           <div class="setting-input">
-            <input type="number" min="1" max="60" bind:value={longBreakDuration} onchange={saveSettings} />
+            <input id="pomodoro-long" type="number" min="1" max="60" bind:value={longBreakDuration} onchange={saveSettings} />
             <span>min</span>
           </div>
         </div>
         <div class="setting-row">
-          <label>Long break after</label>
+          <label for="pomodoro-until">Long break after</label>
           <div class="setting-input">
-            <input type="number" min="1" max="10" bind:value={pomodorosUntilLongBreak} onchange={saveSettings} />
+            <input id="pomodoro-until" type="number" min="1" max="10" bind:value={pomodorosUntilLongBreak} onchange={saveSettings} />
             <span>pomodoros</span>
           </div>
         </div>
         <div class="setting-row">
-          <label>Auto-start breaks</label>
-          <input type="checkbox" bind:checked={autoStartBreaks} onchange={saveSettings} />
+          <label for="pomodoro-auto-breaks">Auto-start breaks</label>
+          <input id="pomodoro-auto-breaks" type="checkbox" bind:checked={autoStartBreaks} onchange={saveSettings} />
         </div>
         <div class="setting-row">
-          <label>Auto-start work</label>
-          <input type="checkbox" bind:checked={autoStartWork} onchange={saveSettings} />
+          <label for="pomodoro-auto-work">Auto-start work</label>
+          <input id="pomodoro-auto-work" type="checkbox" bind:checked={autoStartWork} onchange={saveSettings} />
         </div>
         <div class="setting-row">
-          <label>Sound notifications</label>
-          <input type="checkbox" bind:checked={soundEnabled} onchange={saveSettings} />
+          <label for="pomodoro-sound">Sound notifications</label>
+          <input id="pomodoro-sound" type="checkbox" bind:checked={soundEnabled} onchange={saveSettings} />
         </div>
       </div>
     {:else}

@@ -29,7 +29,7 @@
 
 {#if open}
   <div class="modal-backdrop" onclick={close} onkeydown={(e) => e.key === 'Escape' && close()} role="button" tabindex="0">
-    <div class="modal" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()} role="dialog" aria-modal="true" tabindex="-1">
+    <div class="modal" role="dialog" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()} aria-modal="true" tabindex="-1">
       <header class="modal-header">
         <h2>Sync Conflicts</h2>
         <button class="close-btn" onclick={close}>✕</button>

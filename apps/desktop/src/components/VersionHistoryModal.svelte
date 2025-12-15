@@ -76,7 +76,7 @@
     aria-modal="true"
     tabindex="-1"
   >
-    <div class="modal" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
+    <div class="modal" role="document" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
       <header class="modal-header">
         <h2>Version History</h2>
         <button class="close-btn" onclick={close} aria-label="Close">x</button>

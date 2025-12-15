@@ -348,7 +348,7 @@ Top 3 priorities:
     onclick={() => open = false}
     onkeydown={handleKeydown}
   >
-    <div class="modal" onclick={(e) => e.stopPropagation()}>
+    <div class="modal" role="document" onclick={(e) => e.stopPropagation()}>
       {#if showCreateForm}
         <!-- Create/Edit Template Form -->
         <div class="modal-header">

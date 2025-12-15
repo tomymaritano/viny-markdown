@@ -426,7 +426,7 @@
     tabindex="-1"
   >
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="modal" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
+    <div class="modal" role="document" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
       <header class="modal-header">
         <h2 id="export-title">Export to PDF</h2>
         <button class="close-btn" onclick={close} aria-label="Close">✕</button>

@@ -216,7 +216,7 @@
     aria-labelledby="reminders-title"
     tabindex="-1"
   >
-    <div class="modal" onclick={(e) => e.stopPropagation()}>
+    <div class="modal" role="document" onclick={(e) => e.stopPropagation()}>
       <header class="modal-header">
         <h2 id="reminders-title">
           {noteId ? 'Note Reminders' : 'All Reminders'}
@@ -276,8 +276,9 @@
             </div>
 
             <div class="form-field">
-              <label>Message (optional)</label>
+              <label for="reminder-message">Message (optional)</label>
               <input
+                id="reminder-message"
                 type="text"
                 bind:value={reminderMessage}
                 placeholder="What should you remember?"

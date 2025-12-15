@@ -130,7 +130,7 @@
     tabindex="-1"
   >
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="modal" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
+    <div class="modal" role="document" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
       <header class="modal-header">
         <h2 id="customize-title">Customize Shortcuts</h2>
         <div class="header-actions">
