@@ -378,7 +378,7 @@
               </div>
             {:else}
               <div class="empty-state">
-                <span class="empty-icon">🔔</span>
+                <span class="empty-icon">Bell</span>
                 <p>No reminders {viewMode === 'overdue' ? 'overdue' : viewMode === 'today' ? 'for today' : 'yet'}</p>
                 <button class="add-first-btn" onclick={() => showAddForm = true}>
                   Add your first reminder

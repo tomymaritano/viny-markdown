@@ -139,22 +139,22 @@
           <!-- Quick Stats -->
           <section class="quick-stats">
             <div class="stat-card">
-              <span class="stat-icon">🔥</span>
+              <span class="stat-icon">Streak:</span>
               <span class="stat-value">{currentStreak}</span>
               <span class="stat-label">Day Streak</span>
             </div>
             <div class="stat-card">
-              <span class="stat-icon">🏆</span>
+              <span class="stat-icon">Best:</span>
               <span class="stat-value">{longestStreak}</span>
               <span class="stat-label">Best Streak</span>
             </div>
             <div class="stat-card">
-              <span class="stat-icon">⏱️</span>
+              <span class="stat-icon">Time:</span>
               <span class="stat-value">{formatMinutes(todayStats.minutesActive)}</span>
               <span class="stat-label">Time Today</span>
             </div>
             <div class="stat-card">
-              <span class="stat-icon">📝</span>
+              <span class="stat-icon">Words:</span>
               <span class="stat-value">{todayStats.notesEdited}</span>
               <span class="stat-label">Notes Edited</span>
             </div>
@@ -268,7 +268,7 @@
 
             {#if monthlyStats.bestDay}
               <div class="best-day">
-                <span class="best-day-icon">🏆</span>
+                <span class="best-day-icon">Best:</span>
                 <div class="best-day-info">
                   <span class="best-day-title">Best Day</span>
                   <span class="best-day-value">{monthlyStats.bestDay.words} words on {formatDate(monthlyStats.bestDay.date)}</span>
@@ -277,7 +277,7 @@
             {/if}
 
             <div class="time-stat">
-              <span class="time-icon">⏱️</span>
+              <span class="time-icon">Time:</span>
               <span class="time-value">{formatMinutes(monthlyStats.totalMinutes)} total writing time</span>
             </div>
           </section>

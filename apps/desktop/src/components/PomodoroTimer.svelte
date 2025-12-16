@@ -207,7 +207,7 @@
           onclick={() => showSettings = !showSettings}
           title="Settings"
         >
-          ⚙️
+          Settings
         </button>
         <button class="close-btn" onclick={handleClose}>✕</button>
       </div>
@@ -315,18 +315,18 @@
         <div class="timer-controls">
           {#if isRunning}
             <button class="control-btn pause" onclick={pauseTimer}>
-              ⏸️ Pause
+              Pause
             </button>
           {:else}
             <button class="control-btn start" onclick={startTimer}>
-              ▶️ Start
+              Start
             </button>
           {/if}
           <button class="control-btn reset" onclick={resetTimer} title="Reset timer">
-            🔄
+            Reset
           </button>
           <button class="control-btn skip" onclick={skipSession} title="Skip to next session">
-            ⏭️
+            Skip
           </button>
         </div>
 

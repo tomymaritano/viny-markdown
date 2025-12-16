@@ -65,7 +65,7 @@ export const snippets: Snippet[] = [
   {
     name: 'today',
     description: 'Insert today\'s date',
-    icon: '📅',
+    icon: 'D',
     template: () => new Date().toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
@@ -91,13 +91,13 @@ export const snippets: Snippet[] = [
   {
     name: 'datetime',
     description: 'Insert date and time',
-    icon: '📅',
+    icon: 'D',
     template: () => new Date().toLocaleString(),
   },
   {
     name: 'timestamp',
     description: 'Insert ISO timestamp',
-    icon: '⏱️',
+    icon: 'T',
     template: () => new Date().toISOString(),
   },
 
@@ -105,7 +105,7 @@ export const snippets: Snippet[] = [
   {
     name: 'note',
     description: 'Note callout',
-    icon: '📝',
+    icon: 'N',
     template: '> **Note:** ',
   },
   {
@@ -117,7 +117,7 @@ export const snippets: Snippet[] = [
   {
     name: 'warning',
     description: 'Warning callout',
-    icon: '⚠️',
+    icon: 'W',
     template: '> **Warning:** ',
   },
   {
@@ -181,7 +181,7 @@ export const snippets: Snippet[] = [
   {
     name: 'tasks',
     description: 'Multiple tasks',
-    icon: '📋',
+    icon: 'L',
     template: '- [ ] Task 1\n- [ ] Task 2\n- [ ] Task 3',
   },
   {
@@ -201,13 +201,13 @@ export const snippets: Snippet[] = [
   {
     name: 'table',
     description: 'Simple table',
-    icon: '📊',
+    icon: 'G',
     template: '| Column 1 | Column 2 | Column 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |',
   },
   {
     name: 'table2',
     description: '2-column table',
-    icon: '📊',
+    icon: 'G',
     template: '| Header 1 | Header 2 |\n|----------|----------|\n| Cell 1   | Cell 2   |',
   },
 
@@ -254,7 +254,7 @@ export const snippets: Snippet[] = [
   {
     name: 'weekly',
     description: 'Weekly review template',
-    icon: '📅',
+    icon: 'D',
     template: `## Weekly Review
 
 ### Accomplishments
@@ -315,7 +315,7 @@ export const snippets: Snippet[] = [
   {
     name: 'link',
     description: 'Link template',
-    icon: '🔗',
+    icon: 'K',
     template: '[text](url)',
   },
   {
@@ -327,7 +327,7 @@ export const snippets: Snippet[] = [
   {
     name: 'footnote',
     description: 'Footnote',
-    icon: '📌',
+    icon: 'P',
     template: '[^1]\n\n[^1]: ',
   },
 ];
@@ -469,12 +469,12 @@ export function getSnippetContent(snippet: Snippet): string {
 
 // Snippet categories
 export const snippetCategories = [
-  { id: 'date-time', name: 'Date & Time', icon: '📅' },
+  { id: 'date-time', name: 'Date & Time', icon: 'D' },
   { id: 'callouts', name: 'Callouts', icon: '💬' },
   { id: 'code', name: 'Code', icon: '💻' },
-  { id: 'lists', name: 'Lists & Tasks', icon: '📋' },
-  { id: 'tables', name: 'Tables', icon: '📊' },
-  { id: 'templates', name: 'Templates', icon: '📝' },
+  { id: 'lists', name: 'Lists & Tasks', icon: 'L' },
+  { id: 'tables', name: 'Tables', icon: 'G' },
+  { id: 'templates', name: 'Templates', icon: 'N' },
   { id: 'misc', name: 'Miscellaneous', icon: '🔧' },
   { id: 'custom', name: 'Custom', icon: '⭐' },
 ];

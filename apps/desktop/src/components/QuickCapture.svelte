@@ -128,7 +128,7 @@
       onclick={maximize}
       transition:fly={{ y: 50, duration: 200 }}
     >
-      <span class="indicator-icon">✏️</span>
+      <span class="indicator-icon">Draft</span>
       <span class="indicator-text">Draft</span>
       <span class="indicator-preview">{content.slice(0, 30)}{content.length > 30 ? '...' : ''}</span>
     </button>

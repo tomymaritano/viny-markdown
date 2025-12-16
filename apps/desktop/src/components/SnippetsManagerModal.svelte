@@ -65,7 +65,7 @@
   function resetForm() {
     formName = '';
     formDescription = '';
-    formIcon = '📝';
+    formIcon = 'S';
     formTemplate = '';
     formCategory = 'custom';
     editingSnippet = null;
@@ -94,7 +94,7 @@
       updateCustomSnippet(editingSnippet.id, {
         name: formName.trim(),
         description: formDescription.trim(),
-        icon: formIcon || '📝',
+        icon: formIcon || 'S',
         template: formTemplate,
         category: formCategory,
       });
@@ -102,7 +102,7 @@
       addCustomSnippet({
         name: formName.trim(),
         description: formDescription.trim(),
-        icon: formIcon || '📝',
+        icon: formIcon || 'S',
         template: formTemplate,
         category: formCategory,
       });
@@ -169,7 +169,7 @@
 
   const previewTemplate = $derived(processTemplate(formTemplate));
 
-  const commonEmojis = ['📝', '💡', '⭐', '🎯', '📌', '🔖', '💬', '📋', '✅', '🚀', '💻', '📊'];
+  const commonEmojis = ['S', 'L', 'R', 'F', 'P', 'B', 'C', 'Y', 'V', 'G', 'D', 'T'];
 </script>
 
 {#if open}
@@ -273,7 +273,7 @@
                     }}
                     title="Delete snippet"
                   >
-                    🗑️
+                    Del
                   </button>
                 </div>
               {/each}

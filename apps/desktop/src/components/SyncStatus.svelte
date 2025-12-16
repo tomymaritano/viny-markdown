@@ -25,9 +25,9 @@
   }
 
   function getStatusIcon(): string {
-    if (syncStore.isSyncing) return '🔄';
-    if (syncStore.hasError) return '⚠️';
-    if (syncStore.pendingChanges > 0) return '📤';
+    if (syncStore.isSyncing) return '↻';
+    if (syncStore.hasError) return '!';
+    if (syncStore.pendingChanges > 0) return '↑';
     return '✓';
   }
 

@@ -183,7 +183,7 @@
 
 <div class="search-container">
   <div class="search-input-wrapper">
-    <span class="search-icon">🔍</span>
+    <span class="search-icon">#</span>
     <input
       type="text"
       class="search-input"
@@ -206,7 +206,7 @@
       onclick={toggleFilters}
       title="Search filters"
     >
-      <span class="filter-icon">⚙️</span>
+      <span class="filter-icon">F</span>
       {#if activeFiltersCount > 0}
         <span class="filter-badge">{activeFiltersCount}</span>
       {/if}
@@ -330,7 +330,7 @@
       {#each searchHistory as term}
         <div class="history-item">
           <button class="history-term" onclick={() => useHistoryItem(term)}>
-            <span class="history-icon">🕐</span>
+            <span class="history-icon">H</span>
             {term}
           </button>
           <button class="history-remove" onclick={() => removeFromHistory(term)} title="Remove">

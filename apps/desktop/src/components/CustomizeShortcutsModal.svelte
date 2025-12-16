@@ -106,13 +106,13 @@
 
   function getCategoryIcon(category: string): string {
     const icons: Record<string, string> = {
-      'Notes': '📝',
+      'Notes': 'N',
       'Navigation': '🧭',
       'View': '👁',
-      'Editor': '✏️',
-      'App': '⚙️',
+      'Editor': 'E',
+      'App': 'S',
     };
-    return icons[category] || '📌';
+    return icons[category] || 'P';
   }
 </script>
 

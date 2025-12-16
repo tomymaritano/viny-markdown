@@ -30,11 +30,11 @@
   let isExporting = $state(false);
 
   const formats: { id: ExportFormat; name: string; icon: string; description: string }[] = [
-    { id: 'md', name: 'Markdown', icon: '📝', description: 'Original format with full formatting' },
-    { id: 'txt', name: 'Plain Text', icon: '📄', description: 'Simple text without formatting' },
-    { id: 'html', name: 'HTML', icon: '🌐', description: 'Web page with styling' },
-    { id: 'json', name: 'JSON', icon: '🔧', description: 'Structured data format' },
-    { id: 'rtf', name: 'Rich Text', icon: '📋', description: 'Compatible with Word processors' },
+    { id: 'md', name: 'Markdown', icon: 'MD', description: 'Original format with full formatting' },
+    { id: 'txt', name: 'Plain Text', icon: 'TXT', description: 'Simple text without formatting' },
+    { id: 'html', name: 'HTML', icon: 'HTML', description: 'Web page with styling' },
+    { id: 'json', name: 'JSON', icon: 'JSON', description: 'Structured data format' },
+    { id: 'rtf', name: 'Rich Text', icon: 'RTF', description: 'Compatible with Word processors' },
   ];
 
   function getFileExtension(format: ExportFormat): string {

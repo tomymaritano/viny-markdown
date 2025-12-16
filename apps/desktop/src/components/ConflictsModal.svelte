@@ -6,10 +6,10 @@
 
   function getEntityIcon(type: string): string {
     switch (type) {
-      case 'note': return '📝';
-      case 'notebook': return '📁';
-      case 'tag': return '🏷️';
-      default: return '📄';
+      case 'note': return 'N';
+      case 'notebook': return 'F';
+      case 'tag': return 'T';
+      default: return 'D';
     }
   }
 

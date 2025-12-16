@@ -35,19 +35,19 @@
   let customTemplates = $state<Template[]>(loadCustomTemplates());
   let showCreateForm = $state(false);
   let editingTemplate = $state<Template | null>(null);
-  let newTemplateIcon = $state('📝');
+  let newTemplateIcon = $state('T');
   let newTemplateName = $state('');
   let newTemplateDescription = $state('');
   let newTemplateTitle = $state('');
   let newTemplateContent = $state('');
 
-  const emojiOptions = ['📝', '📋', '📌', '💼', '🎯', '💡', '🔖', '📚', '🗂️', '⭐', '🏷️', '📊', '🎨', '🔬', '📐', '💻'];
+  const emojiOptions = ['N', 'T', 'P', 'W', 'G', 'I', 'B', 'S', 'F', 'R', 'M', 'D', 'A', 'L', 'C', 'X'];
 
   const builtInTemplates: Template[] = [
     {
       id: 'blank',
       name: 'Blank Note',
-      icon: '📄',
+      icon: 'N',
       description: 'Start with an empty note',
       title: '',
       content: ''
@@ -55,7 +55,7 @@
     {
       id: 'meeting',
       name: 'Meeting Notes',
-      icon: '📅',
+      icon: 'M',
       description: 'Capture meeting outcomes and action items',
       title: 'Meeting Notes - ',
       content: `## Meeting Details
@@ -78,7 +78,7 @@
     {
       id: 'todo',
       name: 'To-Do List',
-      icon: '✅',
+      icon: 'T',
       description: 'Simple task list template',
       title: 'Tasks - ',
       content: `## Priority Tasks
@@ -97,7 +97,7 @@
     {
       id: 'journal',
       name: 'Daily Journal',
-      icon: '📔',
+      icon: 'J',
       description: 'Reflect on your day',
       title: `Journal - ${new Date().toLocaleDateString()}`,
       content: `## Today's Date
@@ -125,7 +125,7 @@ What's one thing I want to do tomorrow?
     {
       id: 'project',
       name: 'Project Plan',
-      icon: '🚀',
+      icon: 'P',
       description: 'Plan and track a project',
       title: 'Project: ',
       content: `## Project Overview
@@ -154,7 +154,7 @@ What's one thing I want to do tomorrow?
     {
       id: 'brainstorm',
       name: 'Brainstorm',
-      icon: '💡',
+      icon: 'I',
       description: 'Capture ideas freely',
       title: 'Brainstorm: ',
       content: `## Topic
@@ -176,7 +176,7 @@ What's one thing I want to do tomorrow?
     {
       id: 'weekly',
       name: 'Weekly Review',
-      icon: '📊',
+      icon: 'W',
       description: 'Review your week and plan ahead',
       title: `Week of ${new Date().toLocaleDateString()}`,
       content: `## This Week's Wins
@@ -204,7 +204,7 @@ Top 3 priorities:
     {
       id: 'recipe',
       name: 'Recipe',
-      icon: '🍳',
+      icon: 'R',
       description: 'Save your favorite recipes',
       title: 'Recipe: ',
       content: `## Recipe Name
@@ -224,7 +224,7 @@ Top 3 priorities:
 ## Notes
 
 
-## Rating: ⭐️⭐️⭐️⭐️⭐️
+## Rating: 5/5
 `
     }
   ];
@@ -249,7 +249,7 @@ Top 3 priorities:
   function openCreateForm() {
     showCreateForm = true;
     editingTemplate = null;
-    newTemplateIcon = '📝';
+    newTemplateIcon = 'T';
     newTemplateName = '';
     newTemplateDescription = '';
     newTemplateTitle = '';
@@ -317,7 +317,7 @@ Top 3 priorities:
     const note = notesStore.selectedNote;
     if (!note) return;
 
-    newTemplateIcon = '📝';
+    newTemplateIcon = 'T';
     newTemplateName = note.title ? `${note.title} Template` : 'Custom Template';
     newTemplateDescription = 'Saved from current note';
     newTemplateTitle = note.title || '';
@@ -456,8 +456,8 @@ Top 3 priorities:
               </button>
               {#if template.isCustom}
                 <div class="template-actions">
-                  <button class="action-btn" onclick={() => openEditForm(template)} title="Edit">✏️</button>
-                  <button class="action-btn danger" onclick={() => deleteTemplate(template.id)} title="Delete">🗑️</button>
+                  <button class="action-btn" onclick={() => openEditForm(template)} title="Edit">Edit</button>
+                  <button class="action-btn danger" onclick={() => deleteTemplate(template.id)} title="Delete">Delete</button>
                 </div>
               {/if}
             </div>

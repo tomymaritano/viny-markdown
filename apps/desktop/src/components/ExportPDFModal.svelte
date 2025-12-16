@@ -382,9 +382,9 @@
 
           ${includeMeta ? `
             <div class="meta">
-              <span class="meta-item">📅 ${new Date(note.updated_at).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-              <span class="meta-item">📝 ${wordCount} words</span>
-              <span class="meta-item">⏱️ ${readingTime} min read</span>
+              <span class="meta-item">${new Date(note.updated_at).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span class="meta-item">${wordCount} words</span>
+              <span class="meta-item">${readingTime} min read</span>
               ${note.tags && note.tags.length > 0 ? `
                 <div class="tags">
                   ${note.tags.map(t => `<span class="tag">#${t}</span>`).join('')}
@@ -467,12 +467,12 @@
                 class="option-btn"
                 class:active={orientation === 'portrait'}
                 onclick={() => orientation = 'portrait'}
-              >📄 Portrait</button>
+              >Portrait</button>
               <button
                 class="option-btn"
                 class:active={orientation === 'landscape'}
                 onclick={() => orientation = 'landscape'}
-              >📃 Landscape</button>
+              >Landscape</button>
             </div>
           </div>
 
@@ -504,17 +504,17 @@
                 class="option-btn theme-btn light"
                 class:active={theme === 'light'}
                 onclick={() => theme = 'light'}
-              >☀️ Light</button>
+              >Light</button>
               <button
                 class="option-btn theme-btn dark"
                 class:active={theme === 'dark'}
                 onclick={() => theme = 'dark'}
-              >🌙 Dark</button>
+              >Dark</button>
               <button
                 class="option-btn theme-btn sepia"
                 class:active={theme === 'sepia'}
                 onclick={() => theme = 'sepia'}
-              >📜 Sepia</button>
+              >Sepia</button>
             </div>
           </div>
         </div>
@@ -557,7 +557,7 @@
       <footer class="modal-footer">
         <button class="btn-secondary" onclick={close}>Cancel</button>
         <button class="btn-primary" onclick={exportPDF}>
-          📄 Export PDF
+          Export PDF
         </button>
       </footer>
     </div>

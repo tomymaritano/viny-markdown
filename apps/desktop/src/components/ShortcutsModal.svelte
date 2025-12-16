@@ -20,7 +20,7 @@
   const shortcutGroups: ShortcutGroup[] = [
     {
       name: 'Notes',
-      icon: '📝',
+      icon: 'N',
       items: [
         { keys: isMac ? '⌘N' : 'Ctrl+N', description: 'New note' },
         { keys: isMac ? '⌘⇧N' : 'Ctrl+Shift+N', description: 'New from template' },
@@ -49,7 +49,7 @@
     },
     {
       name: 'View',
-      icon: '👁',
+      icon: 'V',
       items: [
         { keys: isMac ? '⌘\\' : 'Ctrl+\\', description: 'Toggle focus mode' },
         { keys: isMac ? '⌘⇧D' : 'Ctrl+Shift+D', description: 'Toggle dark mode' },
@@ -58,7 +58,7 @@
     },
     {
       name: 'App',
-      icon: '⚙️',
+      icon: 'S',
       items: [
         { keys: isMac ? '⌘,' : 'Ctrl+,', description: 'Settings' },
         { keys: isMac ? '⌘/' : 'Ctrl+/', description: 'Keyboard shortcuts' },
@@ -67,7 +67,7 @@
     },
     {
       name: 'Editor',
-      icon: '✏️',
+      icon: 'E',
       items: [
         { keys: isMac ? '⌘F' : 'Ctrl+F', description: 'Find & Replace' },
         { keys: '[[title]]', description: 'Link to note' },
@@ -119,7 +119,7 @@
         <h2 id="shortcuts-title">Keyboard Shortcuts</h2>
         <div class="header-actions">
           <button class="customize-btn" onclick={onCustomize} title="Customize shortcuts">
-            ⚙️ Customize
+            Customize
           </button>
           <button class="close-btn" onclick={close} aria-label="Close">✕</button>
         </div>

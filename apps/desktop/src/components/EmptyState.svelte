@@ -1,6 +1,6 @@
 <script lang="ts">
   let {
-    icon = '📝',
+    icon = 'Empty',
     title = 'No items',
     description = '',
     action = null as { label: string; onclick: () => void } | null,

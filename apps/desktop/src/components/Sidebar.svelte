@@ -248,7 +248,7 @@
       ondragleave={handleDragLeave}
       ondrop={(e) => handleDrop(e, null)}
     >
-      <span class="icon">📝</span>
+      <span class="icon">N</span>
       All Notes
       <span class="count">{notesStore.allNotes.length}</span>
     </button>
@@ -258,7 +258,7 @@
       class:active={notesStore.showingStarred}
       onclick={() => notesStore.setShowingStarred(true)}
     >
-      <span class="icon">⭐</span>
+      <span class="icon">★</span>
       Starred
       {#if notesStore.starredNotes.length > 0}
         <span class="count starred-count">{notesStore.starredNotes.length}</span>
@@ -270,7 +270,7 @@
       class:active={notesStore.viewingArchived}
       onclick={() => notesStore.setViewingArchived(true)}
     >
-      <span class="icon">📦</span>
+      <span class="icon">A</span>
       Archived
       {#if notesStore.archivedNotes.length > 0}
         <span class="count">{notesStore.archivedNotes.length}</span>
@@ -282,7 +282,7 @@
       class:active={notesStore.viewingTrash}
       onclick={() => notesStore.setViewingTrash(true)}
     >
-      <span class="icon">🗑️</span>
+      <span class="icon">T</span>
       Trash
       {#if notesStore.trashedNotes.length > 0}
         <span class="count trash-count">{notesStore.trashedNotes.length}</span>
@@ -332,7 +332,7 @@
             ondragleave={handleDragLeave}
             ondrop={(e) => handleDrop(e, notebook.id)}
           >
-            <span class="icon" style:color={notebook.color}>📁</span>
+            <span class="icon" style:color={notebook.color}>F</span>
             <span class="notebook-name">{notebook.name}</span>
             {#if stats.notes > 0}
               <span class="notebook-stats" title="{stats.notes} notes, {stats.words} words">
@@ -351,13 +351,13 @@
             <!-- svelte-ignore a11y_no_static_element_interactions -->
             <div class="notebook-menu" onmouseleave={closeNotebookMenu}>
               <button class="notebook-menu-item" onclick={() => { exportNotebook(notebook.id, notebook.name); closeNotebookMenu(); }}>
-                <span>📤</span> Export notebook
+                <span>Export</span>
               </button>
               <button class="notebook-menu-item" onclick={() => { const newName = prompt('Rename notebook:', notebook.name); if (newName) appStore.updateNotebook(notebook.id, { name: newName }); closeNotebookMenu(); }}>
-                <span>✏️</span> Rename
+                <span>Rename</span>
               </button>
               <button class="notebook-menu-item danger" onclick={() => { if (confirm(`Delete "${notebook.name}"? Notes will be moved to "All Notes".`)) appStore.deleteNotebook(notebook.id); closeNotebookMenu(); }}>
-                <span>🗑️</span> Delete
+                <span>Delete</span>
               </button>
             </div>
           {/if}
@@ -409,7 +409,7 @@
     <div class="progress-header">
       <span class="progress-title">Today's Progress</span>
       {#if currentStreak > 0}
-        <span class="streak-badge" title="{currentStreak} day streak">🔥 {currentStreak}</span>
+        <span class="streak-badge" title="{currentStreak} day streak">{currentStreak} day streak</span>
       {/if}
     </div>
     <div class="progress-bar-container">
@@ -421,7 +421,7 @@
     </div>
     {#if todayStats.notesEdited > 0}
       <div class="progress-notes">
-        📝 {todayStats.notesEdited} note{todayStats.notesEdited !== 1 ? 's' : ''} edited
+        {todayStats.notesEdited} note{todayStats.notesEdited !== 1 ? 's' : ''} edited
       </div>
     {/if}
   </div>
@@ -452,11 +452,11 @@
     <SyncStatus onOpenConflicts={onOpenConflicts} />
     <div class="footer-buttons">
       <button class="footer-btn" onclick={onOpenGraph} title="Note Graph">
-        <span class="footer-icon">🔗</span>
+        <span class="footer-icon">G</span>
         Graph
       </button>
       <button class="footer-btn" onclick={onOpenSettings} title="Settings">
-        <span class="footer-icon">⚙️</span>
+        <span class="footer-icon">S</span>
         Settings
       </button>
     </div>

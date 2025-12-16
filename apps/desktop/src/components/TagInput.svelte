@@ -199,7 +199,7 @@
         onclick={() => showSmartSuggestions = !showSmartSuggestions}
         title="Smart tag suggestions"
       >
-        ✨ {smartSuggestions().length}
+        {smartSuggestions().length} suggestions
       </button>
     {/if}
   </div>
@@ -207,7 +207,7 @@
   {#if showSmartSuggestions && smartSuggestions().length > 0}
     <div class="smart-suggestions">
       <div class="smart-header">
-        <span class="smart-title">✨ Suggested tags</span>
+        <span class="smart-title">Suggested tags</span>
         <button class="smart-close" onclick={() => showSmartSuggestions = false}>✕</button>
       </div>
       <div class="smart-list">

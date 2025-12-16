@@ -39,33 +39,33 @@
   // Commands available in command mode
   const commands: Command[] = [
     // Notes
-    { id: 'new-note', label: 'New Note', description: 'Create a blank note', icon: '📝', category: 'notes', shortcut: '⌘N', action: () => createNote() },
-    { id: 'new-template', label: 'New from Template', description: 'Create note from template', icon: '📋', category: 'notes', shortcut: '⌘⇧N', action: () => { onOpenTemplates(); } },
-    { id: 'quick-capture', label: 'Quick Capture', description: 'Quickly capture a thought', icon: '⚡', category: 'notes', shortcut: '⌘⇧C', action: () => { onOpenQuickCapture(); } },
-    { id: 'duplicate-note', label: 'Duplicate Note', description: 'Create a copy of current note', icon: '📄', category: 'notes', shortcut: '⌘D', action: () => duplicateNote() },
-    { id: 'delete-note', label: 'Delete Note', description: 'Move current note to trash', icon: '🗑️', category: 'notes', shortcut: '⌘⌫', action: () => deleteNote() },
-    { id: 'pin-note', label: 'Toggle Pin', description: 'Pin/unpin current note', icon: '📌', category: 'notes', shortcut: '⌘⇧P', action: () => togglePin() },
-    { id: 'star-note', label: 'Toggle Star', description: 'Star/unstar current note', icon: '⭐', category: 'notes', action: () => toggleStar() },
-    { id: 'copy-note', label: 'Copy to Clipboard', description: 'Copy note content as markdown', icon: '📋', category: 'notes', shortcut: '⌘⇧Y', action: () => copyToClipboard() },
-    { id: 'new-notebook', label: 'New Notebook', description: 'Create a new notebook', icon: '📁', category: 'notes', action: () => createNotebook() },
+    { id: 'new-note', label: 'New Note', description: 'Create a blank note', icon: 'N', category: 'notes', shortcut: '⌘N', action: () => createNote() },
+    { id: 'new-template', label: 'New from Template', description: 'Create note from template', icon: 'T', category: 'notes', shortcut: '⌘⇧N', action: () => { onOpenTemplates(); } },
+    { id: 'quick-capture', label: 'Quick Capture', description: 'Quickly capture a thought', icon: 'Q', category: 'notes', shortcut: '⌘⇧C', action: () => { onOpenQuickCapture(); } },
+    { id: 'duplicate-note', label: 'Duplicate Note', description: 'Create a copy of current note', icon: 'D', category: 'notes', shortcut: '⌘D', action: () => duplicateNote() },
+    { id: 'delete-note', label: 'Delete Note', description: 'Move current note to trash', icon: 'X', category: 'notes', shortcut: '⌘⌫', action: () => deleteNote() },
+    { id: 'pin-note', label: 'Toggle Pin', description: 'Pin/unpin current note', icon: 'P', category: 'notes', shortcut: '⌘⇧P', action: () => togglePin() },
+    { id: 'star-note', label: 'Toggle Star', description: 'Star/unstar current note', icon: '★', category: 'notes', action: () => toggleStar() },
+    { id: 'copy-note', label: 'Copy to Clipboard', description: 'Copy note content as markdown', icon: 'C', category: 'notes', shortcut: '⌘⇧Y', action: () => copyToClipboard() },
+    { id: 'new-notebook', label: 'New Notebook', description: 'Create a new notebook', icon: 'F', category: 'notes', action: () => createNotebook() },
 
     // Navigation
-    { id: 'all-notes', label: 'Go to All Notes', description: 'Show all notes', icon: '📝', category: 'navigation', action: () => { notesStore.setNotebook(null); notesStore.setViewingTrash(false); } },
-    { id: 'starred', label: 'Go to Starred', description: 'Show starred notes', icon: '⭐', category: 'navigation', action: () => notesStore.setShowingStarred(true) },
-    { id: 'trash', label: 'Go to Trash', description: 'Show deleted notes', icon: '🗑️', category: 'navigation', action: () => notesStore.setViewingTrash(true) },
-    { id: 'prev-note', label: 'Previous Note', description: 'Select previous note in list', icon: '⬆️', category: 'navigation', shortcut: 'K', action: () => navigateNotes(-1) },
-    { id: 'next-note', label: 'Next Note', description: 'Select next note in list', icon: '⬇️', category: 'navigation', shortcut: 'J', action: () => navigateNotes(1) },
+    { id: 'all-notes', label: 'Go to All Notes', description: 'Show all notes', icon: 'A', category: 'navigation', action: () => { notesStore.setNotebook(null); notesStore.setViewingTrash(false); } },
+    { id: 'starred', label: 'Go to Starred', description: 'Show starred notes', icon: '★', category: 'navigation', action: () => notesStore.setShowingStarred(true) },
+    { id: 'trash', label: 'Go to Trash', description: 'Show deleted notes', icon: 'T', category: 'navigation', action: () => notesStore.setViewingTrash(true) },
+    { id: 'prev-note', label: 'Previous Note', description: 'Select previous note in list', icon: '↑', category: 'navigation', shortcut: 'K', action: () => navigateNotes(-1) },
+    { id: 'next-note', label: 'Next Note', description: 'Select next note in list', icon: '↓', category: 'navigation', shortcut: 'J', action: () => navigateNotes(1) },
 
     // View
-    { id: 'toggle-theme', label: 'Toggle Theme', description: 'Switch between light/dark mode', icon: '🌓', category: 'view', shortcut: '⌘⇧D', action: () => { appStore.toggleTheme(); toast.success(appStore.theme === 'dark' ? 'Dark mode' : 'Light mode'); } },
-    { id: 'edit-mode', label: 'Edit Mode', description: 'Switch to edit view', icon: '✏️', category: 'view', action: () => toast.info('Press Edit button in toolbar') },
-    { id: 'preview-mode', label: 'Preview Mode', description: 'Switch to preview view', icon: '👁️', category: 'view', action: () => toast.info('Press Preview button in toolbar') },
+    { id: 'toggle-theme', label: 'Toggle Theme', description: 'Switch between light/dark mode', icon: '◐', category: 'view', shortcut: '⌘⇧D', action: () => { appStore.toggleTheme(); toast.success(appStore.theme === 'dark' ? 'Dark mode' : 'Light mode'); } },
+    { id: 'edit-mode', label: 'Edit Mode', description: 'Switch to edit view', icon: 'E', category: 'view', action: () => toast.info('Press Edit button in toolbar') },
+    { id: 'preview-mode', label: 'Preview Mode', description: 'Switch to preview view', icon: 'V', category: 'view', action: () => toast.info('Press Preview button in toolbar') },
     { id: 'split-mode', label: 'Split Mode', description: 'Show editor and preview side by side', icon: '◫', category: 'view', action: () => toast.info('Press Split button in toolbar') },
 
     // App
-    { id: 'settings', label: 'Open Settings', description: 'Configure app preferences', icon: '⚙️', category: 'app', shortcut: '⌘,', action: () => { onOpenSettings(); } },
-    { id: 'shortcuts', label: 'Keyboard Shortcuts', description: 'View all shortcuts', icon: '⌨️', category: 'app', shortcut: '⌘/', action: () => { onOpenShortcuts(); } },
-    { id: 'reload', label: 'Reload Notes', description: 'Refresh notes from database', icon: '🔄', category: 'app', action: async () => { await notesStore.initialize(); toast.success('Notes reloaded'); } },
+    { id: 'settings', label: 'Open Settings', description: 'Configure app preferences', icon: 'S', category: 'app', shortcut: '⌘,', action: () => { onOpenSettings(); } },
+    { id: 'shortcuts', label: 'Keyboard Shortcuts', description: 'View all shortcuts', icon: '?', category: 'app', shortcut: '⌘/', action: () => { onOpenShortcuts(); } },
+    { id: 'reload', label: 'Reload Notes', description: 'Refresh notes from database', icon: 'R', category: 'app', action: async () => { await notesStore.initialize(); toast.success('Notes reloaded'); } },
   ];
 
   const categoryLabels: Record<string, string> = {
@@ -347,7 +347,7 @@
     >
       <div class="search-input-wrapper">
         <span class="search-icon">
-          {mode === 'command' ? '>' : '🔍'}
+          {mode === 'command' ? '>' : '#'}
         </span>
         <input
           bind:this={inputRef}

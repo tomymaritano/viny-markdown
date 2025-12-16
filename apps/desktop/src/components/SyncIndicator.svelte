@@ -67,13 +67,13 @@
   >
     <span class="sync-icon" class:syncing={syncStore.isSyncing}>
       {#if syncStore.hasError}
-        ⚠️
+        !
       {:else if syncStore.isSyncing}
-        🔄
+        ↻
       {:else if !syncStore.isConfigured}
-        ☁️
+        Cloud
       {:else if syncStore.pendingChanges > 0}
-        📤
+        ↑
       {:else}
         ✓
       {/if}
@@ -119,7 +119,7 @@
       {/if}
       {#if syncStore.conflicts.length > 0}
         <div class="detail-conflicts">
-          ⚠️ {syncStore.conflicts.length} conflict{syncStore.conflicts.length !== 1 ? 's' : ''}
+          {syncStore.conflicts.length} conflict{syncStore.conflicts.length !== 1 ? 's' : ''}
         </div>
       {/if}
     </div>

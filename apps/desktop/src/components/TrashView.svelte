@@ -77,7 +77,7 @@
   <div class="trash-content">
     {#if notesStore.trashedNotes.length === 0}
       <div class="empty-state">
-        <span class="empty-icon">🗑️</span>
+        <span class="empty-icon">Trash</span>
         <h3>Trash is empty</h3>
         <p>Deleted notes will appear here</p>
       </div>
@@ -97,10 +97,10 @@
             </div>
             <div class="item-actions">
               <button class="action-btn restore" onclick={() => restoreNote(note.id)} title="Restore">
-                ↩️
+                Restore
               </button>
               <button class="action-btn delete" onclick={() => confirmDelete(note.id)} title="Delete permanently">
-                ✕
+                Delete
               </button>
             </div>
           </div>

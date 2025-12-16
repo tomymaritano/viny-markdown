@@ -335,16 +335,16 @@
       </div>
       <div class="selection-actions">
         <button class="selection-btn" onclick={exportSelected} title="Export selected" disabled={selectedIds.size === 0}>
-          📤
+          Export
         </button>
         <button class="selection-btn" onclick={pinSelected} title="Pin selected" disabled={selectedIds.size === 0}>
-          📌
+          Pin
         </button>
         <button class="selection-btn" onclick={unpinSelected} title="Unpin selected" disabled={selectedIds.size === 0}>
-          📍
+          Unpin
         </button>
         <button class="selection-btn danger" onclick={deleteSelected} title="Delete selected" disabled={selectedIds.size === 0}>
-          🗑️
+          Delete
         </button>
         <button class="selection-btn cancel" onclick={toggleSelectionMode}>
           ✕
@@ -421,7 +421,7 @@
               <span class="star-icon">★</span>
             {/if}
             {#if note.is_pinned}
-              <span class="pin-icon">📌</span>
+              <span class="pin-icon">P</span>
             {/if}
           </div>
         {/if}
@@ -441,21 +441,21 @@
               onclick={(e) => togglePin(e, note.id)}
               title={note.is_pinned ? 'Unpin' : 'Pin'}
             >
-              {note.is_pinned ? '📍' : '📌'}
+              {note.is_pinned ? 'P' : 'Pin'}
             </button>
             <button
               class="quick-action-btn"
               onclick={(e) => duplicateNote(e, note)}
               title="Duplicate"
             >
-              📄
+              Dup
             </button>
             <button
               class="quick-action-btn danger"
               onclick={(e) => deleteNote(e, note.id)}
               title="Delete"
             >
-              🗑️
+              Del
             </button>
           </div>
         {/if}

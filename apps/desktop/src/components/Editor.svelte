@@ -2514,7 +2514,7 @@
       </div>
       {#if ambientSoundId !== 'none'}
         <div class="ambient-volume">
-          <span class="volume-icon">🔊</span>
+          <span class="volume-icon">Vol</span>
           <input
             type="range"
             min="0"
@@ -2530,7 +2530,7 @@
       <!-- Lo-fi Music Section -->
       <div class="lofi-section">
         <div class="lofi-header">
-          <span class="lofi-title">🎵 Lo-fi Music</span>
+          <span class="lofi-title">Lo-fi Music</span>
         </div>
         <div class="lofi-stations">
           {#each lofiStations as station}
@@ -2614,7 +2614,7 @@
           onclick={() => viewMode = 'reading'}
           title="Reading mode"
         >
-          📖
+          Read
         </button>
         <button
           class="toggle-btn"
@@ -2639,7 +2639,7 @@
             onclick={() => scrollSyncEnabled = !scrollSyncEnabled}
             title={scrollSyncEnabled ? 'Scroll sync enabled' : 'Scroll sync disabled'}
           >
-            🔗
+            Link
           </button>
         {/if}
       </div>
@@ -2652,7 +2652,7 @@
             onclick={() => showOutline = !showOutline}
             title="Table of contents"
           >
-            📑
+            TOC
           </button>
         {/if}
         <button
@@ -2661,7 +2661,7 @@
           onclick={() => showBacklinks = !showBacklinks}
           title="Backlinks ({backlinks().length} in, {outgoingLinks().length} out)"
         >
-          🔗
+          Link
           {#if backlinks().length > 0}
             <span class="backlink-badge">{backlinks().length}</span>
           {/if}
@@ -2672,10 +2672,10 @@
           onclick={togglePin}
           title={note.is_pinned ? 'Unpin' : 'Pin'}
         >
-          📌
+          Pin
         </button>
         <button class="toolbar-btn" onclick={copyToClipboard} title="Copy to clipboard">
-          📋
+          Copy
         </button>
         {#if dictationSupported}
           <div class="dictation-container">
@@ -2748,7 +2748,7 @@
           onclick={() => showFocusMode = !showFocusMode}
           title="Focus mode with timer"
         >
-          🎯
+          Focus
         </button>
         <div class="color-picker-container">
           <button
@@ -2793,13 +2793,13 @@
             <!-- svelte-ignore a11y_no_static_element_interactions -->
             <div class="more-menu" role="menu" aria-label="More actions" onmouseleave={() => showMoreMenu = false}>
               <button class="menu-item" role="menuitem" onclick={() => { duplicateNote(); showMoreMenu = false; }}>
-                <span>📄</span> Duplicate
+                <span>D</span> Duplicate
               </button>
               <button class="menu-item" role="menuitem" onclick={() => { showExportModal = true; showMoreMenu = false; }}>
-                <span>📤</span> Export...
+                <span>E</span> Export...
               </button>
               <button class="menu-item" role="menuitem" onclick={() => { showExportPDF = true; showMoreMenu = false; }}>
-                <span>📄</span> Export PDF
+                <span>P</span> Export PDF
               </button>
               <button class="menu-item" role="menuitem" onclick={() => { showVersionHistory = true; showMoreMenu = false; }}>
                 <span>🕰️</span> Version History
@@ -2809,7 +2809,7 @@
               </button>
               <hr class="menu-divider" />
               <button class="menu-item danger" role="menuitem" onclick={() => { confirmDelete(); showMoreMenu = false; }}>
-                <span>🗑️</span> Delete
+                <span>X</span> Delete
               </button>
             </div>
           {/if}
@@ -3146,14 +3146,14 @@
               <div class="format-group">
                 <button class="format-btn" onclick={formatCode} title="Inline code">&lt;/&gt;</button>
                 <button class="format-btn" onclick={formatCodeBlock} title="Code block">```</button>
-                <button class="format-btn" onclick={formatLink} title="Link">🔗</button>
+                <button class="format-btn" onclick={formatLink} title="Link">Link</button>
                 <button class="format-btn" onclick={formatNoteLink} title="Note link">[[]]</button>
               </div>
               <div class="format-divider"></div>
               <div class="format-group">
                 <button class="format-btn" onclick={formatHr} title="Horizontal rule">―</button>
                 <button class="format-btn" onclick={formatTable} title="Insert table">☷</button>
-                <button class="format-btn" onclick={insertImageFromFile} title="Insert image">🖼️</button>
+                <button class="format-btn" onclick={insertImageFromFile} title="Insert image">Img</button>
               </div>
               <button
                 class="format-toggle"
@@ -3366,7 +3366,7 @@
               onclick={() => readingTheme = 'night'}
               title="Night"
             >
-              <span class="theme-icon">🌙</span>
+              <span class="theme-icon">Dark</span>
             </button>
           </div>
           <div class="reading-container">
@@ -3465,7 +3465,7 @@
           class="backlinks-header"
           onclick={() => showBacklinks = !showBacklinks}
         >
-          <span class="backlinks-icon">🔗</span>
+          <span class="backlinks-icon">Link</span>
           <span class="backlinks-title">Backlinks ({backlinks().length})</span>
           <span class="backlinks-toggle">{showBacklinks ? '▼' : '▶'}</span>
         </button>
@@ -3649,13 +3649,13 @@
             </button>
             <span class="stat-divider">|</span>
             <button class="stat-btn stats-btn" onclick={() => showWritingStats = true} title="Writing statistics">
-              📊
+              Stats
             </button>
             <button class="stat-btn calendar-btn" onclick={() => showCalendarView = true} title="Calendar view">
-              📅
+              Cal
             </button>
             <button class="stat-btn reminders-btn" onclick={() => showReminders = true} title="Reminders">
-              🔔
+              Rem
               {#if getOverdueReminders().length > 0}
                 <span class="reminder-badge">{getOverdueReminders().length}</span>
               {/if}
@@ -3667,7 +3667,7 @@
               title="Table of Contents"
               disabled={headings().length === 0}
             >
-              📑
+              Snip
               {#if headings().length > 0}
                 <span class="outline-count">{headings().length}</span>
               {/if}
@@ -3899,7 +3899,7 @@
   {:else}
     <div class="empty-editor">
       <div class="empty-content">
-        <span class="empty-icon">📝</span>
+        <span class="empty-icon">Note</span>
         <h3>No note selected</h3>
         <p>Select a note from the list or create a new one</p>
         <p class="shortcut-hint">Press <kbd>⌘N</kbd> to create a new note</p>
@@ -3920,42 +3920,42 @@
   >
     {#if selectedText}
       <button class="context-item" role="menuitem" onclick={contextCopyText}>
-        <span class="context-icon">📋</span>
+        <span class="context-icon">Copy</span>
         Copy selection
       </button>
       <button class="context-item" role="menuitem" onclick={contextSearchInNote}>
-        <span class="context-icon">🔍</span>
+        <span class="context-icon">Find</span>
         Find in editor
       </button>
       <button class="context-item" role="menuitem" onclick={contextLinkSelection}>
-        <span class="context-icon">🔗</span>
+        <span class="context-icon">Link</span>
         Make note link
       </button>
       <button class="context-item" role="menuitem" onclick={contextCreateNoteFromSelection}>
-        <span class="context-icon">📝</span>
+        <span class="context-icon">Note</span>
         Create note from selection
       </button>
       <button class="context-item" role="menuitem" onclick={contextDefineWord}>
-        <span class="context-icon">📖</span>
+        <span class="context-icon">Read</span>
         Define word
       </button>
       <hr class="context-divider" />
     {/if}
     <button class="context-item" role="menuitem" onclick={contextCopyAsMarkdown}>
-      <span class="context-icon">📄</span>
+      <span class="context-icon">Doc</span>
       Copy as Markdown
     </button>
     <button class="context-item" role="menuitem" onclick={contextCopyAll}>
-      <span class="context-icon">📑</span>
+      <span class="context-icon">TOC</span>
       Copy entire note
     </button>
     <hr class="context-divider" />
     <button class="context-item" role="menuitem" onclick={() => { viewMode = 'edit'; closeContextMenu(); }}>
-      <span class="context-icon">✏️</span>
+      <span class="context-icon">Edit</span>
       Switch to edit mode
     </button>
     <button class="context-item" role="menuitem" onclick={() => { exportNote(); closeContextMenu(); }}>
-      <span class="context-icon">📤</span>
+      <span class="context-icon">Export</span>
       Export note
     </button>
   </div>
@@ -3996,7 +3996,7 @@
     <div class="definition-modal" onclick={(e) => e.stopPropagation()}>
       <header class="definition-header">
         <h2 id="definition-title">
-          <span class="def-icon">📖</span>
+          <span class="def-icon">Read</span>
           Definition
         </h2>
         <button class="def-close-btn" onclick={closeDefinitionModal} aria-label="Close">
@@ -4026,7 +4026,7 @@
             {/if}
             {#if definitionData.phonetics?.find(p => p.audio)}
               <button class="def-audio-btn" onclick={playPronunciation} title="Listen to pronunciation">
-                🔊
+                Vol
               </button>
             {/if}
           </div>
@@ -4100,7 +4100,7 @@
     </button>
     <span class="sel-divider"></span>
     <button class="sel-btn" onclick={makeLink} title="Link">
-      🔗
+      Link
     </button>
     <button class="sel-btn" onclick={makeNoteLink} title="Note link [[...]]">
       📎

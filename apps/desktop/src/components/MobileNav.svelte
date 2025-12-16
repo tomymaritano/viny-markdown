@@ -20,7 +20,7 @@
     class:active={currentView === 'sidebar'}
     onclick={() => onViewChange('sidebar')}
   >
-    <span class="nav-icon">📁</span>
+    <span class="nav-icon">B</span>
     <span class="nav-label">Browse</span>
   </button>
 
@@ -29,7 +29,7 @@
     class:active={currentView === 'list'}
     onclick={() => onViewChange('list')}
   >
-    <span class="nav-icon">📝</span>
+    <span class="nav-icon">N</span>
     <span class="nav-label">Notes</span>
     {#if notesStore.filteredNotes.length > 0}
       <span class="badge">{notesStore.filteredNotes.length}</span>
@@ -46,12 +46,12 @@
     onclick={() => onViewChange('editor')}
     disabled={!notesStore.selectedNoteId}
   >
-    <span class="nav-icon">✏️</span>
+    <span class="nav-icon">E</span>
     <span class="nav-label">Edit</span>
   </button>
 
   <button class="nav-btn" onclick={onOpenSettings}>
-    <span class="nav-icon">⚙️</span>
+    <span class="nav-icon">S</span>
     <span class="nav-label">Settings</span>
   </button>
 </nav>

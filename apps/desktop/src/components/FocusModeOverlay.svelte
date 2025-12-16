@@ -373,7 +373,7 @@
       <!-- Session Complete -->
       {#if sessionCompleted}
         <div class="session-complete">
-          <div class="complete-icon">🎉</div>
+          <div class="complete-icon">Complete!</div>
           <h3>Session Complete!</h3>
           <p>Great work! You wrote {wordsWritten} words in {formattedElapsed()}.</p>
         </div>

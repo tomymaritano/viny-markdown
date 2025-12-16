@@ -64,7 +64,7 @@
   <div class="archive-content">
     {#if notesStore.archivedNotes.length === 0}
       <div class="empty-state">
-        <span class="empty-icon">📦</span>
+        <span class="empty-icon">Archive</span>
         <h3>No archived notes</h3>
         <p>Archived notes will appear here</p>
       </div>
@@ -81,10 +81,10 @@
             </div>
             <div class="item-actions">
               <button class="action-btn unarchive" onclick={() => unarchiveNote(note.id)} title="Restore to active">
-                ↩️
+                Restore
               </button>
               <button class="action-btn delete" onclick={() => confirmDelete(note.id)} title="Move to trash">
-                🗑️
+                Delete
               </button>
             </div>
           </div>

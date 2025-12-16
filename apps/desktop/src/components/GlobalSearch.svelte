@@ -186,7 +186,7 @@
     <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
     <div class="global-search" onclick={(e) => e.stopPropagation()}>
       <div class="search-header">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon">#</span>
         <input
           bind:this={searchInput}
           bind:value={searchQuery}
@@ -237,7 +237,7 @@
           {#each groupedResults() as group}
             <div class="result-group">
               <div class="group-header">
-                <span class="group-icon">📄</span>
+                <span class="group-icon">Note</span>
                 <span class="group-title">{group.title}</span>
                 <span class="match-count">{group.matches.length}</span>
               </div>
