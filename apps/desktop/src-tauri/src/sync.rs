@@ -559,8 +559,31 @@ struct ServerTag {
 }
 
 fn get_device_id() -> String {
-    // Simple device ID - in production you'd persist this
-    uuid::Uuid::new_v4().to_string()
+    use std::fs;
+    use std::path::PathBuf;
+
+    // Try to get app data dir, fallback to temp dir
+    let device_id_path: PathBuf = dirs::data_dir()
+        .unwrap_or_else(|| std::env::temp_dir())
+        .join("viny")
+        .join(".device_id");
+
+    // Try to read existing device ID
+    if let Ok(id) = fs::read_to_string(&device_id_path) {
+        let id = id.trim().to_string();
+        if !id.is_empty() {
+            return id;
+        }
+    }
+
+    // Generate new device ID and persist it
+    let new_id = uuid::Uuid::new_v4().to_string();
+    if let Some(parent) = device_id_path.parent() {
+        let _ = fs::create_dir_all(parent);
+    }
+    let _ = fs::write(&device_id_path, &new_id);
+
+    new_id
 }
 
 fn note_to_server(note: &Note) -> ServerNote {
