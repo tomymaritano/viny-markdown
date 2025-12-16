@@ -36,7 +36,7 @@ jobs:
 
             | Platform | Download |
             |----------|----------|
-            | macOS (Universal) | `VINY_*.dmg` |
+            | macOS (Apple Silicon) | `VINY_*.dmg` |
             | Windows | `VINY_*-setup.exe` or `VINY_*.msi` |
             | Linux | `VINY_*.AppImage` or `VINY_*.deb` |
 
@@ -123,7 +123,7 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: aarch64-apple-darwin,x86_64-apple-darwin
+          targets: aarch64-apple-darwin
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
@@ -174,9 +174,9 @@ jobs:
         run: |
           set -euo pipefail
           cd apps/desktop
-          pnpm tauri build --target universal-apple-darwin
+          pnpm tauri build --target aarch64-apple-darwin
 
-          DMG_PATH=$(find src-tauri/target/universal-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
+          DMG_PATH=$(find src-tauri/target/aarch64-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
           if [ -z "$DMG_PATH" ]; then
             echo "DMG not found after build"
             exit 1
