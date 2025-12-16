@@ -8,6 +8,9 @@
     "opener:default",
     "dialog:default",
     "fs:default",
-    "notification:default"
+    "notification:default",
+    "process:allow-restart",
+    "process:allow-exit",
+    "updater:default"
   ]
 }

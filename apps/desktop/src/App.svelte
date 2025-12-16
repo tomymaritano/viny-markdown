@@ -18,6 +18,7 @@
   import GraphView from './components/GraphView.svelte';
   import CustomizeShortcutsModal from './components/CustomizeShortcutsModal.svelte';
   import QuickCapture from './components/QuickCapture.svelte';
+  import UpdateNotification from './components/UpdateNotification.svelte';
   import { notesStore, appStore, syncStore } from '$lib/stores';
   import { shortcuts, isMac } from '$lib/shortcuts';
   import { toast } from '$lib/toast';
@@ -489,6 +490,7 @@
 <GraphView bind:open={graphViewOpen} />
 <QuickCapture bind:open={quickCaptureOpen} />
 <Toast />
+<UpdateNotification />
 
 <style>
   .loading-screen {
