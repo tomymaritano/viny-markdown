@@ -40,7 +40,11 @@
     "category": "Productivity",
     "shortDescription": "Modern note-taking app",
     "longDescription": "VINY is a modern, fast, and secure note-taking application with markdown support.",
-    "createUpdaterArtifacts": true
+    "createUpdaterArtifacts": true,
+    "macOS": {
+      "signingIdentity": "Developer ID Application: Tomas Maritano (CB8LJYCJ3T)",
+      "hardenedRuntime": true
+    }
   },
   "plugins": {
     "updater": {
