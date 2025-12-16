@@ -3,10 +3,11 @@
   import * as api from '$lib/api';
   import { toast } from '$lib/toast';
   import type { ExportStats, ImportStats, SyncResult } from '$lib/bindings';
+  import * as encryption from '$lib/encryption';
 
   let { open = $bindable(false) } = $props();
 
-  let activeTab = $state<'general' | 'sync' | 'backup'>('general');
+  let activeTab = $state<'general' | 'sync' | 'backup' | 'security'>('general');
   let isExporting = $state(false);
   let isImporting = $state(false);
   let exportResult = $state<ExportStats | null>(null);
@@ -24,6 +25,121 @@
   let syncResult = $state<SyncResult | null>(null);
   let autoSyncEnabled = $state(syncStore.autoSyncEnabled);
   let autoSyncInterval = $state(syncStore.autoSyncInterval / 1000); // in seconds for UI
+
+  // Encryption state
+  let encryptionConfigured = $state(false);
+  let encryptionEnabled = $state(false);
+  let encryptionPassword = $state('');
+  let encryptionConfirmPassword = $state('');
+  let encryptionOldPassword = $state('');
+  let encryptionNewPassword = $state('');
+  let isSettingUpEncryption = $state(false);
+  let isUnlocking = $state(false);
+  let isChangingPassword = $state(false);
+
+  // Check encryption status on open
+  $effect(() => {
+    if (open) {
+      checkEncryptionStatus();
+    }
+  });
+
+  async function checkEncryptionStatus() {
+    try {
+      encryptionConfigured = await encryption.hasEncryptionConfigured();
+      encryptionEnabled = await encryption.isEncryptionEnabled();
+    } catch (err) {
+      console.error('Failed to check encryption status:', err);
+    }
+  }
+
+  async function handleSetupEncryption() {
+    if (encryptionPassword.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+    if (encryptionPassword !== encryptionConfirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    isSettingUpEncryption = true;
+    try {
+      await encryption.setupEncryption(encryptionPassword);
+      encryptionConfigured = true;
+      encryptionEnabled = true;
+      encryptionPassword = '';
+      encryptionConfirmPassword = '';
+      toast.success('Encryption enabled');
+    } catch (err) {
+      toast.error('Failed to setup encryption');
+      console.error(err);
+    } finally {
+      isSettingUpEncryption = false;
+    }
+  }
+
+  async function handleUnlock() {
+    isUnlocking = true;
+    try {
+      await encryption.unlockEncryption(encryptionPassword);
+      encryptionEnabled = true;
+      encryptionPassword = '';
+      toast.success('Encryption unlocked');
+    } catch (err) {
+      toast.error('Incorrect password');
+      console.error(err);
+    } finally {
+      isUnlocking = false;
+    }
+  }
+
+  async function handleLock() {
+    try {
+      await encryption.lockEncryption();
+      encryptionEnabled = false;
+      toast.success('Encryption locked');
+    } catch (err) {
+      toast.error('Failed to lock encryption');
+    }
+  }
+
+  async function handleChangePassword() {
+    if (encryptionNewPassword.length < 8) {
+      toast.error('New password must be at least 8 characters');
+      return;
+    }
+
+    isChangingPassword = true;
+    try {
+      await encryption.changeEncryptionPassword(encryptionOldPassword, encryptionNewPassword);
+      encryptionOldPassword = '';
+      encryptionNewPassword = '';
+      toast.success('Password changed');
+    } catch (err) {
+      toast.error('Failed to change password. Check your current password.');
+      console.error(err);
+    } finally {
+      isChangingPassword = false;
+    }
+  }
+
+  async function handleDisableEncryption() {
+    if (!confirm('Are you sure you want to disable encryption? Your notes will no longer be encrypted.')) {
+      return;
+    }
+
+    try {
+      await encryption.disableEncryption(encryptionPassword);
+      encryptionConfigured = false;
+      encryptionEnabled = false;
+      encryptionPassword = '';
+      toast.success('Encryption disabled');
+    } catch (err) {
+      toast.error('Incorrect password');
+      console.error(err);
+    }
+  }
 
   async function checkConnection() {
     isCheckingConnection = true;
@@ -271,6 +387,13 @@
         >
           Backup
         </button>
+        <button
+          class="tab"
+          class:active={activeTab === 'security'}
+          onclick={() => activeTab = 'security'}
+        >
+          Security
+        </button>
       </nav>
 
       <div class="modal-content">
@@ -487,6 +610,137 @@
           {#if errorMessage}
             <div class="result error">{errorMessage}</div>
           {/if}
+
+        {:else if activeTab === 'security'}
+          <section class="settings-section">
+            <h3>End-to-End Encryption</h3>
+            <p class="hint">
+              Encrypt your notes with AES-256-GCM. Only you can read them.
+            </p>
+
+            {#if !encryptionConfigured}
+              <!-- Setup encryption for the first time -->
+              <div class="encryption-form">
+                <label class="form-label">
+                  Password (min 8 characters)
+                  <input
+                    type="password"
+                    bind:value={encryptionPassword}
+                    placeholder="Enter password"
+                    class="form-input"
+                  />
+                </label>
+                <label class="form-label">
+                  Confirm Password
+                  <input
+                    type="password"
+                    bind:value={encryptionConfirmPassword}
+                    placeholder="Confirm password"
+                    class="form-input"
+                  />
+                </label>
+                <button
+                  class="action-btn primary"
+                  onclick={handleSetupEncryption}
+                  disabled={isSettingUpEncryption || encryptionPassword.length < 8}
+                >
+                  {isSettingUpEncryption ? 'Setting up...' : 'Enable Encryption'}
+                </button>
+              </div>
+
+            {:else if !encryptionEnabled}
+              <!-- Encryption configured but locked -->
+              <div class="encryption-status locked">
+                <span class="status-icon">L</span>
+                <span>Encryption is locked</span>
+              </div>
+              <div class="encryption-form">
+                <label class="form-label">
+                  Password
+                  <input
+                    type="password"
+                    bind:value={encryptionPassword}
+                    placeholder="Enter password to unlock"
+                    class="form-input"
+                  />
+                </label>
+                <button
+                  class="action-btn primary"
+                  onclick={handleUnlock}
+                  disabled={isUnlocking || !encryptionPassword}
+                >
+                  {isUnlocking ? 'Unlocking...' : 'Unlock'}
+                </button>
+              </div>
+
+            {:else}
+              <!-- Encryption enabled and unlocked -->
+              <div class="encryption-status unlocked">
+                <span class="status-icon">U</span>
+                <span>Encryption is active</span>
+              </div>
+
+              <div class="button-group">
+                <button class="action-btn" onclick={handleLock}>
+                  Lock Now
+                </button>
+              </div>
+
+              <div class="settings-divider"></div>
+
+              <h4>Change Password</h4>
+              <div class="encryption-form">
+                <label class="form-label">
+                  Current Password
+                  <input
+                    type="password"
+                    bind:value={encryptionOldPassword}
+                    placeholder="Current password"
+                    class="form-input"
+                  />
+                </label>
+                <label class="form-label">
+                  New Password
+                  <input
+                    type="password"
+                    bind:value={encryptionNewPassword}
+                    placeholder="New password"
+                    class="form-input"
+                  />
+                </label>
+                <button
+                  class="action-btn"
+                  onclick={handleChangePassword}
+                  disabled={isChangingPassword || !encryptionOldPassword || encryptionNewPassword.length < 8}
+                >
+                  {isChangingPassword ? 'Changing...' : 'Change Password'}
+                </button>
+              </div>
+
+              <div class="settings-divider"></div>
+
+              <h4>Disable Encryption</h4>
+              <p class="hint warning">This will remove encryption from your notes.</p>
+              <div class="encryption-form">
+                <label class="form-label">
+                  Confirm with Password
+                  <input
+                    type="password"
+                    bind:value={encryptionPassword}
+                    placeholder="Enter password to confirm"
+                    class="form-input"
+                  />
+                </label>
+                <button
+                  class="action-btn danger"
+                  onclick={handleDisableEncryption}
+                  disabled={!encryptionPassword}
+                >
+                  Disable Encryption
+                </button>
+              </div>
+            {/if}
+          </section>
         {/if}
       </div>
     </div>
@@ -791,5 +1045,102 @@
     50% {
       opacity: 0.5;
     }
+  }
+
+  /* Encryption styles */
+  .encryption-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .form-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .form-input {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 14px;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .encryption-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 12px 0;
+  }
+
+  .encryption-status.locked {
+    background: var(--error-light);
+    color: var(--error);
+  }
+
+  .encryption-status.unlocked {
+    background: var(--success-light);
+    color: var(--success);
+  }
+
+  .encryption-status .status-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .encryption-status.locked .status-icon {
+    background: var(--error);
+    color: white;
+  }
+
+  .encryption-status.unlocked .status-icon {
+    background: var(--success);
+    color: white;
+  }
+
+  .settings-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  .settings-section h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+  }
+
+  .hint.warning {
+    color: var(--error);
+  }
+
+  .action-btn.danger {
+    background: var(--error);
+    color: white;
+    border-color: var(--error);
+  }
+
+  .action-btn.danger:hover {
+    background: var(--error-dark);
   }
 </style>

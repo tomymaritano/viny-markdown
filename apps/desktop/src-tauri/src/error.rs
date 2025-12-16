@@ -21,6 +21,9 @@ pub enum AppError {
 
     #[error("Sync error: {0}")]
     Sync(String),
+
+    #[error("Encryption error: {0}")]
+    Encryption(String),
 }
 
 impl Serialize for AppError {

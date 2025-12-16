@@ -1,6 +1,6 @@
 [package]
 name = "viny"
-version = "0.3.0"
+version = "0.4.0"
 description = "A minimal note-taking app"
 authors = ["Tomas Maritano"]
 edition = "2021"
@@ -29,6 +29,10 @@ tauri-plugin-notification = "2"
 reqwest = { version = "0.12", features = ["json"] }
 tokio = { version = "1", features = ["rt-multi-thread"] }
 dirs = "5"
+aes-gcm = "0.10"
+argon2 = "0.5"
+base64 = "0.22"
+rand = "0.8"
 
 [dev-dependencies]
 tempfile = "3"

@@ -1,4 +1,5 @@
 mod commands;
+mod crypto;
 mod db;
 mod error;
 mod export;
@@ -19,6 +20,9 @@ use commands::{
     complete_reminder, create_reminder, delete_note_reminders, delete_reminder, get_due_reminders,
     get_overdue_reminders, get_reminder, get_reminders_by_note, get_today_reminders,
     get_upcoming_reminders, list_reminders, mark_reminder_notified, update_reminder,
+    // Encryption
+    change_encryption_password, disable_encryption, has_encryption_configured, is_encryption_enabled,
+    lock_encryption, setup_encryption, unlock_encryption,
 };
 
 use export::{export_data, get_export_preview, import_data};
@@ -96,6 +100,14 @@ pub fn run() {
             mark_reminder_notified,
             delete_reminder,
             delete_note_reminders,
+            // Encryption
+            is_encryption_enabled,
+            has_encryption_configured,
+            setup_encryption,
+            unlock_encryption,
+            lock_encryption,
+            change_encryption_password,
+            disable_encryption,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

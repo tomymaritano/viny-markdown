@@ -16,6 +16,92 @@
 
   let dropTargetId = $state<string | null>(null);
 
+  // Track collapsed notebooks (stored by ID)
+  let collapsedNotebooks = $state<Set<string>>(new Set());
+
+  // Build hierarchical notebook tree
+  interface NotebookNode {
+    id: string;
+    name: string;
+    color: string | null;
+    icon: string | null;
+    parent_id: string | null;
+    children: NotebookNode[];
+    depth: number;
+  }
+
+  const notebookTree = $derived.by(() => {
+    const notebooks = appStore.notebooks;
+    const nodeMap = new Map<string, NotebookNode>();
+    const roots: NotebookNode[] = [];
+
+    // Create nodes
+    for (const nb of notebooks) {
+      nodeMap.set(nb.id, {
+        id: nb.id,
+        name: nb.name,
+        color: nb.color ?? null,
+        icon: nb.icon ?? null,
+        parent_id: nb.parent_id ?? null,
+        children: [],
+        depth: 0
+      });
+    }
+
+    // Build tree
+    for (const nb of notebooks) {
+      const node = nodeMap.get(nb.id)!;
+      if (nb.parent_id && nodeMap.has(nb.parent_id)) {
+        const parent = nodeMap.get(nb.parent_id)!;
+        node.depth = parent.depth + 1;
+        parent.children.push(node);
+      } else {
+        roots.push(node);
+      }
+    }
+
+    // Sort children alphabetically
+    const sortChildren = (nodes: NotebookNode[]) => {
+      nodes.sort((a, b) => a.name.localeCompare(b.name));
+      for (const node of nodes) {
+        sortChildren(node.children);
+      }
+    };
+    sortChildren(roots);
+
+    return roots;
+  });
+
+  // Flatten tree for rendering (respecting collapsed state)
+  const flatNotebooks = $derived.by(() => {
+    const result: NotebookNode[] = [];
+
+    const traverse = (nodes: NotebookNode[]) => {
+      for (const node of nodes) {
+        result.push(node);
+        if (!collapsedNotebooks.has(node.id) && node.children.length > 0) {
+          traverse(node.children);
+        }
+      }
+    };
+
+    traverse(notebookTree);
+    return result;
+  });
+
+  function toggleNotebookCollapse(id: string) {
+    if (collapsedNotebooks.has(id)) {
+      collapsedNotebooks.delete(id);
+    } else {
+      collapsedNotebooks.add(id);
+    }
+    collapsedNotebooks = new Set(collapsedNotebooks); // Trigger reactivity
+  }
+
+  function hasChildren(notebookId: string): boolean {
+    return appStore.notebooks.some(nb => nb.parent_id === notebookId);
+  }
+
   // Daily progress derived values
   const todayStats = $derived(getTodayStats());
   const writingGoals = $derived(getWritingGoals());
@@ -79,8 +165,8 @@
     return { notes: noteCount, words: wordsStr };
   }
 
-  async function createNotebook() {
-    const name = prompt('Notebook name:');
+  async function createNotebook(parentId?: string) {
+    const name = prompt(parentId ? 'Sub-notebook name:' : 'Notebook name:');
     if (!name || !name.trim()) {
       if (name !== null) { // User didn't cancel, just entered empty
         toast.error('Notebook name cannot be empty');
@@ -92,8 +178,8 @@
       return;
     }
     try {
-      await appStore.createNotebook({ name: name.trim() });
-      toast.success('Notebook created');
+      await appStore.createNotebook({ name: name.trim(), parent_id: parentId });
+      toast.success(parentId ? 'Sub-notebook created' : 'Notebook created');
     } catch (err) {
       toast.error('Failed to create notebook');
     }
@@ -314,16 +400,19 @@
   <div class="section">
     <div class="section-header">
       <span>Notebooks</span>
-      <button class="add-btn" onclick={createNotebook} aria-label="Create notebook">+</button>
+      <button class="add-btn" onclick={() => createNotebook()} aria-label="Create notebook">+</button>
     </div>
     <div class="section-list">
-      {#each appStore.notebooks as notebook}
+      {#each flatNotebooks as notebook}
         {@const stats = getNotebookStats(notebook.id)}
+        {@const hasKids = notebook.children.length > 0}
+        {@const isCollapsed = collapsedNotebooks.has(notebook.id)}
         <div class="notebook-wrapper">
           <div
             class="nav-item notebook-item"
             class:active={notesStore.selectedNotebookId === notebook.id}
             class:drop-target={dropTargetId === notebook.id}
+            style:padding-left="{12 + notebook.depth * 16}px"
             role="button"
             tabindex="0"
             onclick={() => selectNotebook(notebook.id)}
@@ -332,7 +421,18 @@
             ondragleave={handleDragLeave}
             ondrop={(e) => handleDrop(e, notebook.id)}
           >
-            <span class="icon" style:color={notebook.color}>F</span>
+            {#if hasKids}
+              <button
+                class="collapse-btn"
+                onclick={(e) => { e.stopPropagation(); toggleNotebookCollapse(notebook.id); }}
+                title={isCollapsed ? 'Expand' : 'Collapse'}
+              >
+                {isCollapsed ? '▶' : '▼'}
+              </button>
+            {:else}
+              <span class="collapse-spacer"></span>
+            {/if}
+            <span class="icon" style:color={notebook.color}>{notebook.depth > 0 ? 'f' : 'F'}</span>
             <span class="notebook-name">{notebook.name}</span>
             {#if stats.notes > 0}
               <span class="notebook-stats" title="{stats.notes} notes, {stats.words} words">
@@ -350,6 +450,9 @@
           {#if notebookMenuId === notebook.id}
             <!-- svelte-ignore a11y_no_static_element_interactions -->
             <div class="notebook-menu" onmouseleave={closeNotebookMenu}>
+              <button class="notebook-menu-item" onclick={() => { createNotebook(notebook.id); closeNotebookMenu(); }}>
+                <span>+ Sub-notebook</span>
+              </button>
               <button class="notebook-menu-item" onclick={() => { exportNotebook(notebook.id, notebook.name); closeNotebookMenu(); }}>
                 <span>Export</span>
               </button>
@@ -839,7 +942,30 @@
   .notebook-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .collapse-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 14px;
+    font-size: 8px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .collapse-btn:hover {
+    color: var(--text-primary);
+  }
+
+  .collapse-spacer {
+    width: 14px;
+    flex-shrink: 0;
   }
 
   .notebook-name {

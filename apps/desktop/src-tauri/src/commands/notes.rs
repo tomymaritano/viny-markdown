@@ -1,6 +1,7 @@
 use rusqlite::params;
 use tauri::State;
 
+use crate::crypto;
 use crate::db::Database;
 use crate::error::{AppError, Result};
 use crate::models::{CreateNoteInput, ListNotesFilter, Note, NoteStatus, UpdateNoteInput};
@@ -10,10 +11,17 @@ fn row_to_note(row: &rusqlite::Row) -> rusqlite::Result<Note> {
     let tags: Vec<String> = serde_json::from_str(&tags_json).unwrap_or_default();
     let status_str: String = row.get(5)?;
 
+    let raw_title: String = row.get(1)?;
+    let raw_content: String = row.get(2)?;
+
+    // Decrypt if encryption is enabled
+    let title = crypto::maybe_decrypt(&raw_title).unwrap_or(raw_title);
+    let content = crypto::maybe_decrypt(&raw_content).unwrap_or(raw_content);
+
     Ok(Note {
         id: row.get(0)?,
-        title: row.get(1)?,
-        content: row.get(2)?,
+        title,
+        content,
         notebook_id: row.get(3)?,
         tags,
         status: NoteStatus::from_str(&status_str),
@@ -111,8 +119,13 @@ pub fn create_note(db: State<'_, Database>, input: CreateNoteInput) -> Result<No
 
     let id = uuid::Uuid::new_v4().to_string();
     let now = chrono::Utc::now().to_rfc3339();
-    let title = input.title.unwrap_or_default();
-    let content = input.content.unwrap_or_default();
+    let raw_title = input.title.unwrap_or_default();
+    let raw_content = input.content.unwrap_or_default();
+
+    // Encrypt if encryption is enabled
+    let title = crypto::maybe_encrypt(&raw_title)?;
+    let content = crypto::maybe_encrypt(&raw_content)?;
+
     let tags_json = serde_json::to_string(&input.tags.unwrap_or_default()).unwrap();
 
     conn.execute(
@@ -127,7 +140,7 @@ pub fn create_note(db: State<'_, Database>, input: CreateNoteInput) -> Result<No
 
 #[tauri::command]
 pub fn update_note(db: State<'_, Database>, id: String, input: UpdateNoteInput) -> Result<Note> {
-    // First check if note exists
+    // First check if note exists (row_to_note will decrypt the existing values)
     let existing = {
         let conn = db.conn();
         let mut stmt = conn.prepare(
@@ -141,8 +154,14 @@ pub fn update_note(db: State<'_, Database>, id: String, input: UpdateNoteInput) 
     let now = chrono::Utc::now().to_rfc3339();
     let new_revision = existing.revision + 1;
 
-    let title = input.title.unwrap_or(existing.title);
-    let content = input.content.unwrap_or(existing.content);
+    // Use input values or keep existing (already decrypted)
+    let raw_title = input.title.unwrap_or(existing.title);
+    let raw_content = input.content.unwrap_or(existing.content);
+
+    // Encrypt if encryption is enabled
+    let title = crypto::maybe_encrypt(&raw_title)?;
+    let content = crypto::maybe_encrypt(&raw_content)?;
+
     let notebook_id = input.notebook_id.or(existing.notebook_id);
     let tags = input.tags.unwrap_or(existing.tags);
     let status = input.status.unwrap_or(existing.status);
