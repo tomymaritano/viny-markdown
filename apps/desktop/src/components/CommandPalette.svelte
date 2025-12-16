@@ -4,6 +4,52 @@
   import type { SearchResult } from '$lib/bindings';
   import { toast } from '$lib/toast';
   import { fuzzyMatch } from '$lib/markdown';
+  import {
+    FilePlus,
+    LayoutTemplate,
+    Zap,
+    Copy,
+    Trash2,
+    Pin,
+    Star,
+    Clipboard,
+    Folder,
+    FileText,
+    ArrowUp,
+    ArrowDown,
+    Sun,
+    Edit3,
+    Eye,
+    Columns,
+    Settings,
+    HelpCircle,
+    RefreshCw
+  } from '@lucide/svelte';
+
+  // Icon mapping for commands
+  const iconMap: Record<string, typeof FilePlus> = {
+    'new-note': FilePlus,
+    'new-template': LayoutTemplate,
+    'quick-capture': Zap,
+    'duplicate-note': Copy,
+    'delete-note': Trash2,
+    'pin-note': Pin,
+    'star-note': Star,
+    'copy-note': Clipboard,
+    'new-notebook': Folder,
+    'all-notes': FileText,
+    'starred': Star,
+    'trash': Trash2,
+    'prev-note': ArrowUp,
+    'next-note': ArrowDown,
+    'toggle-theme': Sun,
+    'edit-mode': Edit3,
+    'preview-mode': Eye,
+    'split-mode': Columns,
+    'settings': Settings,
+    'shortcuts': HelpCircle,
+    'reload': RefreshCw,
+  };
 
   let {
     open = $bindable(false),
@@ -379,7 +425,13 @@
                     class:selected={flatIndex === selectedIndex}
                     onclick={() => executeCommand(command)}
                   >
-                    <span class="command-icon">{command.icon}</span>
+                    <span class="command-icon">
+                      {#if iconMap[command.id]}
+                        <svelte:component this={iconMap[command.id]} size={16} />
+                      {:else}
+                        {command.icon}
+                      {/if}
+                    </span>
                     <div class="command-content">
                       <span class="result-title">{command.label}</span>
                       {#if command.description}

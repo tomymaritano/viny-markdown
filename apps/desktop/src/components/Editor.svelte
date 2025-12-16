@@ -27,6 +27,10 @@
   import { addWordsWritten, incrementNotesEdited, getTodayStats } from '$lib/writingStats';
   import { getOverdueReminders, getTodayReminders, checkDueReminders, markAsNotified, showReminderNotification, requestNotificationPermission } from '$lib/reminders';
   import { NOTE_COLORS, getNoteColor, setNoteColor, getNoteColorId, type NoteColor } from '$lib/noteColors';
+  import {
+    MoreHorizontal, Copy, Download, FileOutput, Clock, Scissors, Trash2, X,
+    ArrowLeft, ArrowRight, AlertTriangle, FileText
+  } from '@lucide/svelte';
 
   let titleInput: HTMLInputElement;
   let contentArea: HTMLTextAreaElement;
@@ -2497,7 +2501,7 @@
     <div class="ambient-panel">
       <div class="ambient-header">
         <span class="ambient-title">Ambient Sounds</span>
-        <button class="ambient-close" onclick={() => showAmbientPanel = false}>✕</button>
+        <button class="ambient-close" onclick={() => showAmbientPanel = false}><X size={14} /></button>
       </div>
       <div class="ambient-sounds">
         {#each ambientSounds as sound}
@@ -2699,7 +2703,7 @@
               <div class="dictation-panel">
                 <div class="dictation-header">
                   <span class="dictation-title">Voice Dictation</span>
-                  <button class="dictation-close" onclick={() => showDictationPanel = false}>✕</button>
+                  <button class="dictation-close" onclick={() => showDictationPanel = false}><X size={14} /></button>
                 </div>
                 <div class="dictation-language">
                   <label>Language</label>
@@ -2773,7 +2777,7 @@
                     title={color.name}
                   >
                     {#if color.id === 'none'}
-                      <span class="no-color">✕</span>
+                      <span class="no-color"><X size={12} /></span>
                     {/if}
                   </button>
                 {/each}
@@ -2787,29 +2791,29 @@
             onclick={() => showMoreMenu = !showMoreMenu}
             title="More actions"
           >
-            •••
+            <MoreHorizontal size={18} />
           </button>
           {#if showMoreMenu}
             <!-- svelte-ignore a11y_no_static_element_interactions -->
             <div class="more-menu" role="menu" aria-label="More actions" onmouseleave={() => showMoreMenu = false}>
               <button class="menu-item" role="menuitem" onclick={() => { duplicateNote(); showMoreMenu = false; }}>
-                <span>D</span> Duplicate
+                <Copy size={16} /> Duplicate
               </button>
               <button class="menu-item" role="menuitem" onclick={() => { showExportModal = true; showMoreMenu = false; }}>
-                <span>E</span> Export...
+                <Download size={16} /> Export...
               </button>
               <button class="menu-item" role="menuitem" onclick={() => { showExportPDF = true; showMoreMenu = false; }}>
-                <span>P</span> Export PDF
+                <FileOutput size={16} /> Export PDF
               </button>
               <button class="menu-item" role="menuitem" onclick={() => { showVersionHistory = true; showMoreMenu = false; }}>
-                <span>🕰️</span> Version History
+                <Clock size={16} /> Version History
               </button>
               <button class="menu-item" role="menuitem" onclick={() => { showSnippetsManager = true; showMoreMenu = false; }}>
-                <span>✂️</span> Manage Snippets
+                <Scissors size={16} /> Manage Snippets
               </button>
               <hr class="menu-divider" />
               <button class="menu-item danger" role="menuitem" onclick={() => { confirmDelete(); showMoreMenu = false; }}>
-                <span>X</span> Delete
+                <Trash2 size={16} /> Delete
               </button>
             </div>
           {/if}
@@ -2823,7 +2827,7 @@
         <div class="outline-header">
           <span class="outline-title">Table of Contents</span>
           <span class="outline-count">{headings().length} headings</span>
-          <button class="outline-close" onclick={() => showOutline = false}>✕</button>
+          <button class="outline-close" onclick={() => showOutline = false}><X size={14} /></button>
         </div>
         <nav class="outline-nav" aria-label="Document outline">
           {#each headings() as heading, index}
@@ -2854,13 +2858,13 @@
       <div class="backlinks-panel">
         <div class="backlinks-header">
           <span class="backlinks-title">Links</span>
-          <button class="backlinks-close" onclick={() => showBacklinks = false}>✕</button>
+          <button class="backlinks-close" onclick={() => showBacklinks = false}><X size={14} /></button>
         </div>
 
         {#if backlinks().length > 0}
           <div class="backlinks-section">
             <div class="backlinks-section-header">
-              <span class="backlinks-section-icon">←</span>
+              <span class="backlinks-section-icon"><ArrowLeft size={12} /></span>
               <span class="backlinks-section-title">Backlinks</span>
               <span class="backlinks-count">{backlinks().length}</span>
             </div>
@@ -2887,7 +2891,7 @@
         {#if outgoingLinks().length > 0}
           <div class="backlinks-section">
             <div class="backlinks-section-header">
-              <span class="backlinks-section-icon">→</span>
+              <span class="backlinks-section-icon"><ArrowRight size={12} /></span>
               <span class="backlinks-section-title">Links to</span>
               <span class="backlinks-count">{outgoingLinks().length}</span>
             </div>
@@ -3017,7 +3021,7 @@
               ↺
             </button>
           {/if}
-          <button class="find-close" onclick={closeFindReplace}>✕</button>
+          <button class="find-close" onclick={closeFindReplace}><X size={14} /></button>
         </div>
         {#if showRegexHelp && findRegex}
           <div class="regex-help-panel">
@@ -3493,7 +3497,7 @@
     {#if brokenLinks().length > 0 && viewMode !== 'presentation'}
       <div class="broken-links-section">
         <div class="broken-links-header">
-          <span class="broken-icon">⚠️</span>
+          <span class="broken-icon"><AlertTriangle size={16} /></span>
           <span class="broken-title">{brokenLinks().length} broken link{brokenLinks().length > 1 ? 's' : ''}</span>
         </div>
         <div class="broken-links-list">
@@ -3547,7 +3551,7 @@
           <div class="word-goal-container">
             <div class="word-goal-header">
               <span class="goal-label">Goal: {wordCount} / {wordGoal}</span>
-              <button class="goal-close" onclick={() => showWordGoal = false}>✕</button>
+              <button class="goal-close" onclick={() => showWordGoal = false}><X size={14} /></button>
             </div>
             <div class="goal-progress-bar">
               <div
@@ -3678,7 +3682,7 @@
             <div class="outline-panel">
               <div class="outline-header">
                 <span class="outline-title">Table of Contents</span>
-                <button class="outline-close" onclick={() => showOutline = false}>✕</button>
+                <button class="outline-close" onclick={() => showOutline = false}><X size={14} /></button>
               </div>
               <div class="outline-list">
                 {#each headings() as heading, i}
@@ -3703,7 +3707,7 @@
             <div class="char-limit-panel">
               <div class="char-limit-header">
                 <span class="char-limit-title">Character Limit</span>
-                <button class="char-limit-close" onclick={() => showCharLimit = false}>✕</button>
+                <button class="char-limit-close" onclick={() => showCharLimit = false}><X size={14} /></button>
               </div>
               <label class="char-limit-toggle">
                 <input type="checkbox" bind:checked={charLimitEnabled} />
@@ -3899,7 +3903,7 @@
   {:else}
     <div class="empty-editor">
       <div class="empty-content">
-        <span class="empty-icon">Note</span>
+        <span class="empty-icon"><FileText size={48} /></span>
         <h3>No note selected</h3>
         <p>Select a note from the list or create a new one</p>
         <p class="shortcut-hint">Press <kbd>⌘N</kbd> to create a new note</p>

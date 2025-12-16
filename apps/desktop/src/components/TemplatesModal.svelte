@@ -1,6 +1,7 @@
 <script lang="ts">
   import { notesStore } from '$lib/stores';
   import { toast } from '$lib/toast';
+  import { X } from '@lucide/svelte';
 
   let {
     open = $bindable(false)
@@ -435,7 +436,7 @@ Top 3 priorities:
               </button>
             {/if}
             <button class="header-btn primary" onclick={openCreateForm}>+ New Template</button>
-            <button class="close-btn" onclick={() => open = false} aria-label="Close">✕</button>
+            <button class="close-btn" onclick={() => open = false} aria-label="Close"><X size={18} /></button>
           </div>
         </div>
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { appStore, notesStore } from '$lib/stores';
   import { toast } from '$lib/toast';
+  import { X, Plus } from '@lucide/svelte';
 
   let { noteId, tags = [] }: { noteId: string; tags: string[] } = $props();
 
@@ -150,7 +151,7 @@
       <span class="tag">
         {tag}
         <button class="remove-tag" onclick={() => removeTag(tag)} title="Remove tag">
-          x
+          <X size={12} />
         </button>
       </span>
     {/each}
@@ -189,7 +190,7 @@
       </div>
     {:else}
       <button class="add-tag-btn" onclick={() => { isAdding = true; setTimeout(() => inputRef?.focus(), 0); }}>
-        + Add tag
+        <Plus size={12} /> Add tag
       </button>
     {/if}
 
@@ -208,7 +209,9 @@
     <div class="smart-suggestions">
       <div class="smart-header">
         <span class="smart-title">Suggested tags</span>
-        <button class="smart-close" onclick={() => showSmartSuggestions = false}>✕</button>
+        <button class="smart-close" onclick={() => showSmartSuggestions = false}>
+          <X size={14} />
+        </button>
       </div>
       <div class="smart-list">
         {#each smartSuggestions() as suggestion}

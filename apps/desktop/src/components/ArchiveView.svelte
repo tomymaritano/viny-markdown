@@ -2,6 +2,7 @@
   import { notesStore } from '$lib/stores';
   import { toast } from '$lib/toast';
   import ConfirmDialog from './ConfirmDialog.svelte';
+  import { Archive } from '@lucide/svelte';
 
   let showDeleteConfirm = $state(false);
   let noteToDelete = $state<string | null>(null);
@@ -64,7 +65,7 @@
   <div class="archive-content">
     {#if notesStore.archivedNotes.length === 0}
       <div class="empty-state">
-        <span class="empty-icon">Archive</span>
+        <span class="empty-icon"><Archive size={48} /></span>
         <h3>No archived notes</h3>
         <p>Archived notes will appear here</p>
       </div>

@@ -4,6 +4,20 @@
   import { toast } from '$lib/toast';
   import type { Note } from '$lib/bindings';
   import { getNoteColor } from '$lib/noteColors';
+  import {
+    X,
+    CheckSquare,
+    Square,
+    LayoutGrid,
+    List,
+    ArrowUp,
+    ArrowDown,
+    Plus,
+    Star,
+    Pin,
+    Copy,
+    Trash2
+  } from '@lucide/svelte';
 
   let draggedNoteId = $state<string | null>(null);
   let sortBy = $state<'updated' | 'created' | 'title'>('updated');
@@ -347,7 +361,7 @@
           Delete
         </button>
         <button class="selection-btn cancel" onclick={toggleSelectionMode}>
-          ✕
+          <X size={16} />
         </button>
       </div>
     {:else}
@@ -358,14 +372,18 @@
           onclick={toggleSelectionMode}
           title="Select multiple"
         >
-          ☑
+          <CheckSquare size={16} />
         </button>
         <button
           class="view-toggle"
           onclick={toggleViewMode}
           title={viewMode === 'list' ? 'Grid view' : 'List view'}
         >
-          {viewMode === 'list' ? '▦' : '☰'}
+          {#if viewMode === 'list'}
+            <LayoutGrid size={16} />
+          {:else}
+            <List size={16} />
+          {/if}
         </button>
         <select class="sort-select" bind:value={sortBy} title="Sort by">
           <option value="updated">Updated</option>
@@ -377,10 +395,14 @@
           onclick={() => sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'}
           title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
         >
-          {sortOrder === 'asc' ? '↑' : '↓'}
+          {#if sortOrder === 'asc'}
+            <ArrowUp size={16} />
+          {:else}
+            <ArrowDown size={16} />
+          {/if}
         </button>
         <button class="new-note-btn" onclick={createNote} aria-label="Create new note">
-          +
+          <Plus size={18} />
         </button>
       </div>
     {/if}
@@ -413,15 +435,19 @@
       >
         {#if selectionMode}
           <span class="checkbox" class:checked={selectedIds.has(note.id)}>
-            {selectedIds.has(note.id) ? '☑' : '☐'}
+            {#if selectedIds.has(note.id)}
+              <CheckSquare size={16} />
+            {:else}
+              <Square size={16} />
+            {/if}
           </span>
         {:else}
           <div class="note-badges">
             {#if notesStore.isStarred(note.id)}
-              <span class="star-icon">★</span>
+              <span class="star-icon"><Star size={14} fill="currentColor" /></span>
             {/if}
             {#if note.is_pinned}
-              <span class="pin-icon">P</span>
+              <span class="pin-icon"><Pin size={14} /></span>
             {/if}
           </div>
         {/if}
@@ -434,28 +460,29 @@
               onclick={(e) => toggleStar(e, note.id)}
               title={notesStore.isStarred(note.id) ? 'Remove from favorites' : 'Add to favorites'}
             >
-              {notesStore.isStarred(note.id) ? '★' : '☆'}
+              <Star size={14} fill={notesStore.isStarred(note.id) ? 'currentColor' : 'none'} />
             </button>
             <button
               class="quick-action-btn"
+              class:active={note.is_pinned}
               onclick={(e) => togglePin(e, note.id)}
               title={note.is_pinned ? 'Unpin' : 'Pin'}
             >
-              {note.is_pinned ? 'P' : 'Pin'}
+              <Pin size={14} />
             </button>
             <button
               class="quick-action-btn"
               onclick={(e) => duplicateNote(e, note)}
               title="Duplicate"
             >
-              Dup
+              <Copy size={14} />
             </button>
             <button
               class="quick-action-btn danger"
               onclick={(e) => deleteNote(e, note.id)}
               title="Delete"
             >
-              Del
+              <Trash2 size={14} />
             </button>
           </div>
         {/if}

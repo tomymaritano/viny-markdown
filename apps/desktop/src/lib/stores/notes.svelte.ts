@@ -7,6 +7,7 @@
 
 import * as api from '$lib/api';
 import type { Note, NoteStatus, ListNotesFilter } from '$lib/api';
+import { addWordsWritten, incrementNotesEdited } from '$lib/writingStats';
 
 // =============================================================================
 // Types
@@ -287,16 +288,38 @@ async function createNote(input: { title?: string; content?: string } = {}) {
   return note;
 }
 
-async function updateNote(id: string, updates: { title?: string; content?: string }) {
+async function updateNote(id: string, updates: {
+  title?: string;
+  content?: string;
+  tags?: string[];
+  notebook_id?: string | null;
+  status?: NoteStatus;
+  is_pinned?: boolean;
+}) {
   // Save version before updating
   const currentNote = notes.find((n) => n.id === id);
   if (currentNote) {
     saveNoteVersion(currentNote);
   }
 
+  // Track writing stats for content changes
+  if (updates.content !== undefined && currentNote) {
+    const oldWords = currentNote.content.split(/\s+/).filter(w => w.length > 0).length;
+    const newWords = updates.content.split(/\s+/).filter(w => w.length > 0).length;
+    const wordsDiff = newWords - oldWords;
+    if (wordsDiff > 0) {
+      addWordsWritten(wordsDiff);
+    }
+    incrementNotesEdited();
+  }
+
   const updated = await api.updateNote(id, {
     title: updates.title,
     content: updates.content,
+    tags: updates.tags,
+    notebook_id: updates.notebook_id,
+    status: updates.status,
+    is_pinned: updates.is_pinned,
   });
 
   notes = notes.map((n) => (n.id === id ? updated : n));

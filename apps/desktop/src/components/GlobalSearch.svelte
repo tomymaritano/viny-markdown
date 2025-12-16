@@ -2,6 +2,7 @@
   import { notesStore } from '$lib/stores';
   import { toast } from '$lib/toast';
   import { fuzzyMatch } from '$lib/markdown';
+  import { X } from '@lucide/svelte';
 
   let { open = $bindable(false) } = $props<{ open: boolean }>();
 
@@ -218,7 +219,7 @@
             Content
           </button>
         </div>
-        <button class="close-btn" onclick={close}>✕</button>
+        <button class="close-btn" onclick={close}><X size={18} /></button>
       </div>
 
       <div class="search-results">

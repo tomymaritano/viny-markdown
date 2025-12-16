@@ -1,5 +1,6 @@
 <script lang="ts">
   import { toast } from '$lib/toast';
+  import { X } from '@lucide/svelte';
 
   let { open = $bindable(false) } = $props();
 
@@ -209,7 +210,7 @@
         >
           Settings
         </button>
-        <button class="close-btn" onclick={handleClose}>✕</button>
+        <button class="close-btn" onclick={handleClose}><X size={18} /></button>
       </div>
     </div>
 

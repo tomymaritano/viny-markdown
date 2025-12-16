@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { X } from '@lucide/svelte';
   import {
     type CustomSnippet,
     getCustomSnippets,
@@ -186,7 +187,7 @@
     <div class="modal" role="document" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
       <header class="modal-header">
         <h2 id="snippets-title">Snippets Manager</h2>
-        <button class="close-btn" onclick={close} aria-label="Close">✕</button>
+        <button class="close-btn" onclick={close} aria-label="Close"><X size={18} /></button>
       </header>
 
       <div class="modal-body">

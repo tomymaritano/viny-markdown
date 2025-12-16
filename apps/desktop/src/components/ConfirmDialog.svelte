@@ -39,12 +39,12 @@
 </script>
 
 {#if open}
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="dialog-backdrop"
     onclick={handleCancel}
     onkeydown={handleKeydown}
-    role="button"
-    tabindex="0"
+    role="presentation"
   >
     <div
       class="dialog"

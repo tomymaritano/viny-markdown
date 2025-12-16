@@ -1,6 +1,7 @@
 <script lang="ts">
   import { notesStore, type NoteVersion } from '$lib/stores';
   import { toast } from '$lib/toast';
+  import { X, ArrowLeft, Clock } from '@lucide/svelte';
 
   let { open = $bindable(false), noteId = '' } = $props();
 
@@ -79,13 +80,13 @@
     <div class="modal" role="document" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
       <header class="modal-header">
         <h2>Version History</h2>
-        <button class="close-btn" onclick={close} aria-label="Close">x</button>
+        <button class="close-btn" onclick={close} aria-label="Close"><X size={18} /></button>
       </header>
 
       <div class="modal-content">
         {#if versions.length === 0}
           <div class="empty-state">
-            <div class="empty-icon">o</div>
+            <div class="empty-icon"><Clock size={48} /></div>
             <h3>No versions yet</h3>
             <p>Version snapshots are automatically saved as you edit.</p>
           </div>
@@ -93,7 +94,7 @@
           <div class="version-detail">
             <div class="version-detail-header">
               <button class="back-btn" onclick={() => selectedVersion = null}>
-                &larr; Back
+                <ArrowLeft size={14} /> Back
               </button>
               <div class="version-info">
                 <span class="version-time">{formatTimestamp(selectedVersion.timestamp)}</span>

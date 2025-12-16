@@ -1,5 +1,6 @@
 <script lang="ts">
   import { isMac } from '$lib/shortcuts';
+  import { X } from '@lucide/svelte';
 
   let { open = $bindable(false), onCustomize = () => {} } = $props<{
     open?: boolean;
@@ -121,7 +122,7 @@
           <button class="customize-btn" onclick={onCustomize} title="Customize shortcuts">
             Customize
           </button>
-          <button class="close-btn" onclick={close} aria-label="Close">✕</button>
+          <button class="close-btn" onclick={close} aria-label="Close"><X size={18} /></button>
         </div>
       </header>
 

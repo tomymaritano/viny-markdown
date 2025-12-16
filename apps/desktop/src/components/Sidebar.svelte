@@ -3,6 +3,23 @@
   import { toast } from '$lib/toast';
   import SyncStatus from './SyncStatus.svelte';
   import { getTodayStats, getWritingGoals, getCurrentStreak } from '$lib/writingStats';
+  import {
+    FileText,
+    Star,
+    Archive,
+    Trash2,
+    Plus,
+    ChevronRight,
+    ChevronDown,
+    Folder,
+    FolderOpen,
+    MoreHorizontal,
+    Network,
+    Settings,
+    FolderPlus,
+    Download,
+    Edit3
+  } from '@lucide/svelte';
 
   let {
     onOpenSettings = () => {},
@@ -178,7 +195,7 @@
       return;
     }
     try {
-      await appStore.createNotebook({ name: name.trim(), parent_id: parentId });
+      await appStore.createNotebook(name.trim(), parentId ?? null);
       toast.success(parentId ? 'Sub-notebook created' : 'Notebook created');
     } catch (err) {
       toast.error('Failed to create notebook');
@@ -334,7 +351,7 @@
       ondragleave={handleDragLeave}
       ondrop={(e) => handleDrop(e, null)}
     >
-      <span class="icon">N</span>
+      <span class="icon"><FileText size={18} /></span>
       All Notes
       <span class="count">{notesStore.allNotes.length}</span>
     </button>
@@ -344,7 +361,7 @@
       class:active={notesStore.showingStarred}
       onclick={() => notesStore.setShowingStarred(true)}
     >
-      <span class="icon">★</span>
+      <span class="icon starred-icon"><Star size={18} /></span>
       Starred
       {#if notesStore.starredNotes.length > 0}
         <span class="count starred-count">{notesStore.starredNotes.length}</span>
@@ -356,7 +373,7 @@
       class:active={notesStore.viewingArchived}
       onclick={() => notesStore.setViewingArchived(true)}
     >
-      <span class="icon">A</span>
+      <span class="icon"><Archive size={18} /></span>
       Archived
       {#if notesStore.archivedNotes.length > 0}
         <span class="count">{notesStore.archivedNotes.length}</span>
@@ -368,7 +385,7 @@
       class:active={notesStore.viewingTrash}
       onclick={() => notesStore.setViewingTrash(true)}
     >
-      <span class="icon">T</span>
+      <span class="icon trash-icon"><Trash2 size={18} /></span>
       Trash
       {#if notesStore.trashedNotes.length > 0}
         <span class="count trash-count">{notesStore.trashedNotes.length}</span>
@@ -400,7 +417,9 @@
   <div class="section">
     <div class="section-header">
       <span>Notebooks</span>
-      <button class="add-btn" onclick={() => createNotebook()} aria-label="Create notebook">+</button>
+      <button class="add-btn" onclick={() => createNotebook()} aria-label="Create notebook">
+        <Plus size={14} />
+      </button>
     </div>
     <div class="section-list">
       {#each flatNotebooks as notebook}
@@ -427,12 +446,22 @@
                 onclick={(e) => { e.stopPropagation(); toggleNotebookCollapse(notebook.id); }}
                 title={isCollapsed ? 'Expand' : 'Collapse'}
               >
-                {isCollapsed ? '▶' : '▼'}
+                {#if isCollapsed}
+                  <ChevronRight size={14} />
+                {:else}
+                  <ChevronDown size={14} />
+                {/if}
               </button>
             {:else}
               <span class="collapse-spacer"></span>
             {/if}
-            <span class="icon" style:color={notebook.color}>{notebook.depth > 0 ? 'f' : 'F'}</span>
+            <span class="icon" style:color={notebook.color}>
+              {#if isCollapsed || !hasKids}
+                <Folder size={16} />
+              {:else}
+                <FolderOpen size={16} />
+              {/if}
+            </span>
             <span class="notebook-name">{notebook.name}</span>
             {#if stats.notes > 0}
               <span class="notebook-stats" title="{stats.notes} notes, {stats.words} words">
@@ -444,22 +473,26 @@
               onclick={(e) => toggleNotebookMenu(e, notebook.id)}
               title="More options"
             >
-              •••
+              <MoreHorizontal size={14} />
             </button>
           </div>
           {#if notebookMenuId === notebook.id}
             <!-- svelte-ignore a11y_no_static_element_interactions -->
             <div class="notebook-menu" onmouseleave={closeNotebookMenu}>
               <button class="notebook-menu-item" onclick={() => { createNotebook(notebook.id); closeNotebookMenu(); }}>
-                <span>+ Sub-notebook</span>
+                <FolderPlus size={14} />
+                <span>Sub-notebook</span>
               </button>
               <button class="notebook-menu-item" onclick={() => { exportNotebook(notebook.id, notebook.name); closeNotebookMenu(); }}>
+                <Download size={14} />
                 <span>Export</span>
               </button>
               <button class="notebook-menu-item" onclick={() => { const newName = prompt('Rename notebook:', notebook.name); if (newName) appStore.updateNotebook(notebook.id, { name: newName }); closeNotebookMenu(); }}>
+                <Edit3 size={14} />
                 <span>Rename</span>
               </button>
               <button class="notebook-menu-item danger" onclick={() => { if (confirm(`Delete "${notebook.name}"? Notes will be moved to "All Notes".`)) appStore.deleteNotebook(notebook.id); closeNotebookMenu(); }}>
+                <Trash2 size={14} />
                 <span>Delete</span>
               </button>
             </div>
@@ -555,12 +588,12 @@
     <SyncStatus onOpenConflicts={onOpenConflicts} />
     <div class="footer-buttons">
       <button class="footer-btn" onclick={onOpenGraph} title="Note Graph">
-        <span class="footer-icon">G</span>
-        Graph
+        <Network size={16} />
+        <span>Graph</span>
       </button>
       <button class="footer-btn" onclick={onOpenSettings} title="Settings">
-        <span class="footer-icon">S</span>
-        Settings
+        <Settings size={16} />
+        <span>Settings</span>
       </button>
     </div>
   </div>
@@ -634,7 +667,19 @@
   }
 
   .icon {
-    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-secondary);
+  }
+
+  .starred-icon {
+    color: #f59e0b;
+  }
+
+  .trash-icon {
+    color: var(--text-secondary);
   }
 
   .count {
@@ -803,9 +848,6 @@
     color: var(--text-primary);
   }
 
-  .footer-icon {
-    font-size: 13px;
-  }
 
   /* Daily Progress Widget */
   .daily-progress {

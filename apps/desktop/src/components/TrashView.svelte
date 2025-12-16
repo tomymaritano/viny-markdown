@@ -2,6 +2,7 @@
   import { notesStore } from '$lib/stores';
   import { toast } from '$lib/toast';
   import ConfirmDialog from './ConfirmDialog.svelte';
+  import { ArrowLeft, Trash2, RotateCcw } from '@lucide/svelte';
 
   let showEmptyConfirm = $state(false);
   let showDeleteConfirm = $state(false);
@@ -64,7 +65,7 @@
 <div class="trash-view">
   <div class="trash-header">
     <button class="back-btn" onclick={goBack}>
-      ← Back
+      <ArrowLeft size={14} /> Back
     </button>
     <h2>Trash</h2>
     {#if notesStore.trashedNotes.length > 0}
@@ -77,7 +78,7 @@
   <div class="trash-content">
     {#if notesStore.trashedNotes.length === 0}
       <div class="empty-state">
-        <span class="empty-icon">Trash</span>
+        <span class="empty-icon"><Trash2 size={48} /></span>
         <h3>Trash is empty</h3>
         <p>Deleted notes will appear here</p>
       </div>
@@ -97,10 +98,10 @@
             </div>
             <div class="item-actions">
               <button class="action-btn restore" onclick={() => restoreNote(note.id)} title="Restore">
-                Restore
+                <RotateCcw size={14} />
               </button>
               <button class="action-btn delete" onclick={() => confirmDelete(note.id)} title="Delete permanently">
-                Delete
+                <Trash2 size={14} />
               </button>
             </div>
           </div>

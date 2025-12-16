@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { toast, type Toast } from '$lib/toast';
+  import { Check, X, AlertTriangle, Info } from '@lucide/svelte';
 
   let toasts = $state<Toast[]>([]);
 
@@ -9,24 +10,27 @@
       toasts = t;
     });
   });
-
-  function getIcon(type: Toast['type']): string {
-    switch (type) {
-      case 'success': return '✓';
-      case 'error': return '✕';
-      case 'warning': return '⚠';
-      case 'info': return 'ℹ';
-    }
-  }
 </script>
 
 {#if toasts.length > 0}
   <div class="toast-container">
     {#each toasts as t (t.id)}
       <div class="toast {t.type}" role="alert">
-        <span class="toast-icon">{getIcon(t.type)}</span>
+        <span class="toast-icon">
+          {#if t.type === 'success'}
+            <Check size={18} strokeWidth={2.5} />
+          {:else if t.type === 'error'}
+            <X size={18} strokeWidth={2.5} />
+          {:else if t.type === 'warning'}
+            <AlertTriangle size={18} strokeWidth={2} />
+          {:else}
+            <Info size={18} strokeWidth={2} />
+          {/if}
+        </span>
         <span class="toast-message">{t.message}</span>
-        <button class="toast-close" onclick={() => toast.dismiss(t.id)}>✕</button>
+        <button class="toast-close" onclick={() => toast.dismiss(t.id)} aria-label="Dismiss">
+          <X size={14} strokeWidth={2} />
+        </button>
       </div>
     {/each}
   </div>
@@ -71,7 +75,9 @@
   }
 
   .toast-icon {
-    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
   }
 
@@ -98,16 +104,20 @@
   }
 
   .toast-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     cursor: pointer;
     padding: 4px;
-    font-size: 12px;
-    opacity: 0.6;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
   }
 
   .toast-close:hover {
-    opacity: 1;
+    color: var(--text-primary);
+    background: var(--bg-hover);
   }
 </style>

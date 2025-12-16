@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { notesStore } from '$lib/stores';
   import { extractNoteLinks } from '$lib/markdown';
+  import { X, ZoomIn, ZoomOut } from '@lucide/svelte';
 
   let { open = $bindable(false) } = $props();
 
@@ -356,7 +357,7 @@
           <button class="reset-btn" onclick={resetView} title="Reset view">
             Reset
           </button>
-          <button class="close-btn" onclick={close} aria-label="Close">x</button>
+          <button class="close-btn" onclick={close} aria-label="Close"><X size={18} /></button>
         </div>
       </header>
 
@@ -382,9 +383,9 @@
         {/if}
 
         <div class="zoom-controls">
-          <button onclick={() => zoom = Math.min(3, zoom * 1.2)}>+</button>
+          <button onclick={() => zoom = Math.min(3, zoom * 1.2)}><ZoomIn size={16} /></button>
           <span>{Math.round(zoom * 100)}%</span>
-          <button onclick={() => zoom = Math.max(0.3, zoom * 0.8)}>-</button>
+          <button onclick={() => zoom = Math.max(0.3, zoom * 0.8)}><ZoomOut size={16} /></button>
         </div>
       </div>
 

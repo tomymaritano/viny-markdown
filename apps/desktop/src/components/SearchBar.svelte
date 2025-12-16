@@ -3,6 +3,7 @@
   import { notesStore, appStore } from '$lib/stores';
   import * as api from '$lib/api';
   import type { SearchResult } from '$lib/bindings';
+  import { Search, Loader2, SlidersHorizontal, Clock, X } from '@lucide/svelte';
 
   let query = $state('');
   let results = $state<SearchResult[]>([]);
@@ -183,7 +184,7 @@
 
 <div class="search-container">
   <div class="search-input-wrapper">
-    <span class="search-icon">#</span>
+    <span class="search-icon"><Search size={16} /></span>
     <input
       type="text"
       class="search-input"
@@ -198,7 +199,7 @@
       }}
     />
     {#if isSearching}
-      <span class="loading-icon">⏳</span>
+      <span class="loading-icon"><Loader2 size={16} /></span>
     {/if}
     <button
       class="filter-toggle"
@@ -206,7 +207,7 @@
       onclick={toggleFilters}
       title="Search filters"
     >
-      <span class="filter-icon">F</span>
+      <span class="filter-icon"><SlidersHorizontal size={14} /></span>
       {#if activeFiltersCount > 0}
         <span class="filter-badge">{activeFiltersCount}</span>
       {/if}
@@ -330,11 +331,11 @@
       {#each searchHistory as term}
         <div class="history-item">
           <button class="history-term" onclick={() => useHistoryItem(term)}>
-            <span class="history-icon">H</span>
+            <span class="history-icon"><Clock size={14} /></span>
             {term}
           </button>
           <button class="history-remove" onclick={() => removeFromHistory(term)} title="Remove">
-            ✕
+            <X size={12} />
           </button>
         </div>
       {/each}

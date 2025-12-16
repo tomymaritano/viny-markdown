@@ -2,6 +2,7 @@
   import { syncStore, notesStore, appStore } from '$lib/stores';
   import * as api from '$lib/api';
   import { toast } from '$lib/toast';
+  import { X, Cloud, CloudOff, Lock, Unlock } from '@lucide/svelte';
   import type { ExportStats, ImportStats, SyncResult } from '$lib/bindings';
   import * as encryption from '$lib/encryption';
 
@@ -362,7 +363,7 @@
     <div class="modal" role="dialog" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()} aria-modal="true" tabindex="-1">
       <header class="modal-header">
         <h2>Settings</h2>
-        <button class="close-btn" onclick={close}>✕</button>
+        <button class="close-btn" onclick={close}><X size={18} /></button>
       </header>
 
       <nav class="tabs">
@@ -651,7 +652,7 @@
             {:else if !encryptionEnabled}
               <!-- Encryption configured but locked -->
               <div class="encryption-status locked">
-                <span class="status-icon">L</span>
+                <span class="status-icon"><Lock size={16} /></span>
                 <span>Encryption is locked</span>
               </div>
               <div class="encryption-form">
@@ -676,7 +677,7 @@
             {:else}
               <!-- Encryption enabled and unlocked -->
               <div class="encryption-status unlocked">
-                <span class="status-icon">U</span>
+                <span class="status-icon"><Unlock size={16} /></span>
                 <span>Encryption is active</span>
               </div>
 

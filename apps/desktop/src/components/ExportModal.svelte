@@ -1,6 +1,7 @@
 <script lang="ts">
   import { parseMarkdown } from '$lib/markdown';
   import { toast } from '$lib/toast';
+  import { X, FileText, FileType, Code, Braces, FileCode } from '@lucide/svelte';
 
   interface Note {
     id: string;
@@ -29,13 +30,21 @@
   let wrapText = $state(80); // 0 = no wrap
   let isExporting = $state(false);
 
-  const formats: { id: ExportFormat; name: string; icon: string; description: string }[] = [
-    { id: 'md', name: 'Markdown', icon: 'MD', description: 'Original format with full formatting' },
-    { id: 'txt', name: 'Plain Text', icon: 'TXT', description: 'Simple text without formatting' },
-    { id: 'html', name: 'HTML', icon: 'HTML', description: 'Web page with styling' },
-    { id: 'json', name: 'JSON', icon: 'JSON', description: 'Structured data format' },
-    { id: 'rtf', name: 'Rich Text', icon: 'RTF', description: 'Compatible with Word processors' },
+  const formats: { id: ExportFormat; name: string; description: string }[] = [
+    { id: 'md', name: 'Markdown', description: 'Original format with full formatting' },
+    { id: 'txt', name: 'Plain Text', description: 'Simple text without formatting' },
+    { id: 'html', name: 'HTML', description: 'Web page with styling' },
+    { id: 'json', name: 'JSON', description: 'Structured data format' },
+    { id: 'rtf', name: 'Rich Text', description: 'Compatible with Word processors' },
   ];
+
+  const formatIcons: Record<ExportFormat, typeof FileText> = {
+    md: FileText,
+    txt: FileType,
+    html: Code,
+    json: Braces,
+    rtf: FileCode,
+  };
 
   function getFileExtension(format: ExportFormat): string {
     return format;
@@ -314,7 +323,7 @@
     <div class="modal" role="document" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
       <header class="modal-header">
         <h2 id="export-title">Export Note</h2>
-        <button class="close-btn" onclick={close} aria-label="Close">✕</button>
+        <button class="close-btn" onclick={close} aria-label="Close"><X size={18} /></button>
       </header>
 
       <div class="modal-content">
@@ -328,7 +337,7 @@
                 class:selected={selectedFormat === format.id}
                 onclick={() => selectedFormat = format.id}
               >
-                <span class="format-icon">{format.icon}</span>
+                <span class="format-icon"><svelte:component this={formatIcons[format.id]} size={20} /></span>
                 <span class="format-name">{format.name}</span>
                 <span class="format-ext">.{format.id}</span>
               </button>

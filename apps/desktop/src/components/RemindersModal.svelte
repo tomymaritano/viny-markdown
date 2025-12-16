@@ -1,6 +1,7 @@
 <script lang="ts">
   import { notesStore } from '$lib/stores';
   import { toast } from '$lib/toast';
+  import { Bell, X } from '@lucide/svelte';
   import {
     getReminders,
     getRemindersByNoteId,
@@ -378,7 +379,7 @@
               </div>
             {:else}
               <div class="empty-state">
-                <span class="empty-icon">Bell</span>
+                <span class="empty-icon"><Bell size={48} /></span>
                 <p>No reminders {viewMode === 'overdue' ? 'overdue' : viewMode === 'today' ? 'for today' : 'yet'}</p>
                 <button class="add-first-btn" onclick={() => showAddForm = true}>
                   Add your first reminder

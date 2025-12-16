@@ -1,6 +1,7 @@
 <script lang="ts">
   import { syncStore } from '$lib/stores';
   import type { SyncConflict } from '$lib/bindings';
+  import { X, Check, FileText, Folder, Tag } from '@lucide/svelte';
 
   let { open = $bindable(false) } = $props();
 
@@ -32,13 +33,13 @@
     <div class="modal" role="dialog" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()} aria-modal="true" tabindex="-1">
       <header class="modal-header">
         <h2>Sync Conflicts</h2>
-        <button class="close-btn" onclick={close}>✕</button>
+        <button class="close-btn" onclick={close}><X size={18} /></button>
       </header>
 
       <div class="modal-content">
         {#if syncStore.conflicts.length === 0}
           <div class="empty-state">
-            <span class="empty-icon">✓</span>
+            <span class="empty-icon"><Check size={48} /></span>
             <p>No conflicts to resolve</p>
           </div>
         {:else}

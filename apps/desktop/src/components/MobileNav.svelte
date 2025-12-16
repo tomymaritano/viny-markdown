@@ -1,5 +1,6 @@
 <script lang="ts">
   import { notesStore } from '$lib/stores';
+  import { FolderOpen, FileText, Plus, Edit3, Settings } from '@lucide/svelte';
 
   let {
     currentView = 'list',
@@ -20,7 +21,7 @@
     class:active={currentView === 'sidebar'}
     onclick={() => onViewChange('sidebar')}
   >
-    <span class="nav-icon">B</span>
+    <span class="nav-icon"><FolderOpen size={22} /></span>
     <span class="nav-label">Browse</span>
   </button>
 
@@ -29,7 +30,7 @@
     class:active={currentView === 'list'}
     onclick={() => onViewChange('list')}
   >
-    <span class="nav-icon">N</span>
+    <span class="nav-icon"><FileText size={22} /></span>
     <span class="nav-label">Notes</span>
     {#if notesStore.filteredNotes.length > 0}
       <span class="badge">{notesStore.filteredNotes.length}</span>
@@ -37,7 +38,7 @@
   </button>
 
   <button class="nav-btn new-note" onclick={onNewNote}>
-    <span class="nav-icon">+</span>
+    <span class="nav-icon"><Plus size={26} /></span>
   </button>
 
   <button
@@ -46,12 +47,12 @@
     onclick={() => onViewChange('editor')}
     disabled={!notesStore.selectedNoteId}
   >
-    <span class="nav-icon">E</span>
+    <span class="nav-icon"><Edit3 size={22} /></span>
     <span class="nav-label">Edit</span>
   </button>
 
   <button class="nav-btn" onclick={onOpenSettings}>
-    <span class="nav-icon">S</span>
+    <span class="nav-icon"><Settings size={22} /></span>
     <span class="nav-label">Settings</span>
   </button>
 </nav>
@@ -111,11 +112,15 @@
   }
 
   .nav-btn.new-note .nav-icon {
-    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .nav-icon {
-    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .nav-label {

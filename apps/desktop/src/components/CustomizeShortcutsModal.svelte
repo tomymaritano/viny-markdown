@@ -13,6 +13,7 @@
     type ShortcutBinding,
     type ShortcutKeys,
   } from '$lib/customShortcuts';
+  import { X } from '@lucide/svelte';
 
   let { open = $bindable(false) } = $props();
 
@@ -137,7 +138,7 @@
           <button class="reset-all-btn" onclick={resetAll} title="Reset all to defaults">
             Reset All
           </button>
-          <button class="close-btn" onclick={close} aria-label="Close">✕</button>
+          <button class="close-btn" onclick={close} aria-label="Close"><X size={18} /></button>
         </div>
       </header>
 
