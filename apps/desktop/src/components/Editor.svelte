@@ -24,13 +24,14 @@
   import ExportModal from './ExportModal.svelte';
   import CalendarView from './CalendarView.svelte';
   import RemindersModal from './RemindersModal.svelte';
+  import WysiwygEditor from './WysiwygEditor.svelte';
   import { addWordsWritten, incrementNotesEdited, getTodayStats } from '$lib/writingStats';
   import { getOverdueReminders, getTodayReminders, checkDueReminders, markAsNotified, showReminderNotification, requestNotificationPermission } from '$lib/reminders';
   import { NOTE_COLORS, getNoteColor, setNoteColor, getNoteColorId, type NoteColor } from '$lib/noteColors';
   import {
     MoreHorizontal, Copy, Download, FileOutput, Clock, Scissors, Trash2, X,
     ArrowLeft, ArrowRight, AlertTriangle, FileText, Columns, Rows, Monitor, Mic, ChevronDown,
-    Music, Timer, Sparkles, ChevronRight, Paperclip, Highlighter, Play
+    Music, Timer, Sparkles, ChevronRight, Paperclip, Highlighter, Play, PenLine
   } from '@lucide/svelte';
 
   let titleInput: HTMLInputElement;
@@ -38,7 +39,7 @@
   let isSaving = $state(false);
   let lastSavedAt = $state<Date | null>(null);
   let hasUnsavedChanges = $state(false);
-  let viewMode = $state<'edit' | 'preview' | 'split' | 'split-horizontal' | 'reading' | 'presentation'>('edit');
+  let viewMode = $state<'edit' | 'preview' | 'split' | 'split-horizontal' | 'reading' | 'presentation' | 'wysiwyg'>('edit');
   let currentSlide = $state(0);
   let showDeleteConfirm = $state(false);
   let showMoreMenu = $state(false);
@@ -2593,9 +2594,18 @@
           class="toggle-btn"
           class:active={viewMode === 'edit'}
           onclick={() => viewMode = 'edit'}
-          title="Edit mode"
+          title="Edit mode (Markdown)"
         >
           Edit
+        </button>
+        <button
+          class="toggle-btn"
+          class:active={viewMode === 'wysiwyg'}
+          onclick={() => viewMode = 'wysiwyg'}
+          title="WYSIWYG mode (Rich text)"
+          aria-label="WYSIWYG editor"
+        >
+          <PenLine size={16} />
         </button>
         <button
           class="toggle-btn"
@@ -3341,6 +3351,19 @@
           onscroll={handlePreviewScroll}
         >
           {@html parseMarkdown(note.content)}
+        </div>
+      {/if}
+
+      {#if viewMode === 'wysiwyg'}
+        <div class="wysiwyg-pane">
+          <WysiwygEditor
+            content={note.content}
+            placeholder="Start writing..."
+            onUpdate={(markdown) => {
+              // Update the note content when WYSIWYG editor changes
+              debouncedSave({ content: markdown });
+            }}
+          />
         </div>
       {/if}
 
@@ -5273,6 +5296,15 @@
     min-width: 0;
     min-height: 0;
     position: relative;
+  }
+
+  .wysiwyg-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .format-toolbar {
