@@ -277,9 +277,9 @@
 
   async function createNotebook() {
     const name = prompt('Notebook name:');
-    if (name) {
-      await appStore.createNotebook({ name });
-      toast.success(`Notebook "${name}" created`);
+    if (name && name.trim()) {
+      await appStore.createNotebook(name.trim());
+      toast.success(`Notebook "${name.trim()}" created`);
     }
   }
 
