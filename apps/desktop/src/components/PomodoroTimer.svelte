@@ -1,6 +1,6 @@
 <script lang="ts">
   import { toast } from '$lib/toast';
-  import { X } from '@lucide/svelte';
+  import { X, Timer } from '@lucide/svelte';
 
   let { open = $bindable(false) } = $props();
 
@@ -341,7 +341,7 @@
               ></span>
             {/each}
           </div>
-          <span class="count-number">{completedPomodoros} 🍅</span>
+          <span class="count-number">{completedPomodoros} <Timer size={14} /></span>
         </div>
       </div>
     {/if}

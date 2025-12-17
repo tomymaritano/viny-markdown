@@ -2,6 +2,7 @@
   import { notesStore } from '$lib/stores';
   import { toast } from '$lib/toast';
   import { fly, fade } from 'svelte/transition';
+  import { X, Minus, Zap } from '@lucide/svelte';
 
   let { open = $bindable(false) }: { open: boolean } = $props();
 
@@ -152,15 +153,15 @@
     >
       <div class="header">
         <h3 id="quick-capture-title">
-          <span class="header-icon">⚡</span>
+          <span class="header-icon"><Zap size={16} /></span>
           Quick Capture
         </h3>
         <div class="header-actions">
-          <button class="header-btn" onclick={() => isMinimized = true} title="Minimize (Esc)">
-            ─
+          <button class="header-btn" onclick={() => isMinimized = true} title="Minimize (Esc)" aria-label="Minimize">
+            <Minus size={14} />
           </button>
-          <button class="header-btn close" onclick={discard} title="Discard">
-            ✕
+          <button class="header-btn close" onclick={discard} title="Discard" aria-label="Discard">
+            <X size={14} />
           </button>
         </div>
       </div>

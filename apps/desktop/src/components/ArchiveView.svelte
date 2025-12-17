@@ -2,7 +2,7 @@
   import { notesStore } from '$lib/stores';
   import { toast } from '$lib/toast';
   import ConfirmDialog from './ConfirmDialog.svelte';
-  import { Archive } from '@lucide/svelte';
+  import { Archive, ArrowLeft } from '@lucide/svelte';
 
   let showDeleteConfirm = $state(false);
   let noteToDelete = $state<string | null>(null);
@@ -53,8 +53,8 @@
 
 <div class="archive-view">
   <div class="archive-header">
-    <button class="back-btn" onclick={goBack}>
-      ← Back
+    <button class="back-btn" onclick={goBack} aria-label="Go back">
+      <ArrowLeft size={16} /> Back
     </button>
     <h2>Archived Notes</h2>
     <span class="archive-info">

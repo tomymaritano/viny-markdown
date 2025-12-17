@@ -29,7 +29,8 @@
   import { NOTE_COLORS, getNoteColor, setNoteColor, getNoteColorId, type NoteColor } from '$lib/noteColors';
   import {
     MoreHorizontal, Copy, Download, FileOutput, Clock, Scissors, Trash2, X,
-    ArrowLeft, ArrowRight, AlertTriangle, FileText, Columns, Rows, Monitor, Mic, ChevronDown
+    ArrowLeft, ArrowRight, AlertTriangle, FileText, Columns, Rows, Monitor, Mic, ChevronDown,
+    Music, Timer, Sparkles, ChevronRight, Paperclip, Highlighter, Play
   } from '@lucide/svelte';
 
   let titleInput: HTMLInputElement;
@@ -2551,7 +2552,7 @@
         </div>
         {#if lofiStationId !== 'none'}
           <div class="lofi-volume">
-            <span class="volume-icon">🎶</span>
+            <span class="volume-icon"><Music size={14} /></span>
             <input
               type="range"
               min="0"
@@ -2740,16 +2741,18 @@
           class:active={zenMode}
           onclick={toggleZenMode}
           title="Zen mode (distraction-free writing)"
+          aria-label="Zen mode"
         >
-          🧘
+          <Sparkles size={16} />
         </button>
         <button
           class="toolbar-btn"
           class:active={showPomodoro}
           onclick={() => showPomodoro = !showPomodoro}
           title="Pomodoro timer"
+          aria-label="Pomodoro timer"
         >
-          🍅
+          <Timer size={16} />
         </button>
         <button
           class="toolbar-btn"
@@ -3436,8 +3439,9 @@
               class="pres-btn"
               onclick={prevSlide}
               disabled={currentSlide === 0}
+              aria-label="Previous slide"
             >
-              ←
+              <ArrowLeft size={18} />
             </button>
             <span class="slide-counter">
               {currentSlide + 1} / {presentationSlides().length}
@@ -3446,15 +3450,17 @@
               class="pres-btn"
               onclick={nextSlide}
               disabled={currentSlide === presentationSlides().length - 1}
+              aria-label="Next slide"
             >
-              →
+              <ArrowRight size={18} />
             </button>
             <button
               class="pres-btn exit-btn"
               onclick={() => viewMode = 'edit'}
               title="Exit presentation (Esc)"
+              aria-label="Exit presentation"
             >
-              ✕
+              <X size={18} />
             </button>
           </div>
 
@@ -3476,7 +3482,7 @@
         >
           <span class="backlinks-icon">Link</span>
           <span class="backlinks-title">Backlinks ({backlinks().length})</span>
-          <span class="backlinks-toggle">{showBacklinks ? '▼' : '▶'}</span>
+          <span class="backlinks-toggle">{#if showBacklinks}<ChevronDown size={14} />{:else}<ChevronRight size={14} />{/if}</span>
         </button>
         {#if showBacklinks}
           <div class="backlinks-list">
@@ -3644,8 +3650,9 @@
               class:active={isSessionActive}
               onclick={toggleSession}
               title={isSessionActive ? 'Stop writing session' : 'Start writing session'}
+              aria-label={isSessionActive ? 'Stop writing session' : 'Start writing session'}
             >
-              {isSessionActive ? '⏱' : '▶'}
+              {#if isSessionActive}<Timer size={14} />{:else}<Play size={14} />{/if}
             </button>
             {#if isSessionActive}
               <span class="session-stats">
@@ -4009,7 +4016,7 @@
           Definition
         </h2>
         <button class="def-close-btn" onclick={closeDefinitionModal} aria-label="Close">
-          ✕
+          <X size={18} />
         </button>
       </header>
 
@@ -4111,12 +4118,12 @@
     <button class="sel-btn" onclick={makeLink} title="Link">
       Link
     </button>
-    <button class="sel-btn" onclick={makeNoteLink} title="Note link [[...]]">
-      📎
+    <button class="sel-btn" onclick={makeNoteLink} title="Note link [[...]]" aria-label="Create note link">
+      <Paperclip size={14} />
     </button>
     <span class="sel-divider"></span>
-    <button class="sel-btn" onclick={() => wrapSelection('==', '==')} title="Highlight">
-      🖍️
+    <button class="sel-btn" onclick={() => wrapSelection('==', '==')} title="Highlight" aria-label="Highlight text">
+      <Highlighter size={14} />
     </button>
     <button class="sel-btn" onclick={() => wrapSelection('> ', '')} title="Quote">
       "
