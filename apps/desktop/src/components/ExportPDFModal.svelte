@@ -1,7 +1,9 @@
 <script lang="ts">
   import { parseMarkdown, getWordCount, getReadingTime } from '$lib/markdown';
   import { toast } from '$lib/toast';
-  import { X } from '@lucide/svelte';
+  import { X, FileDown, Loader2 } from '@lucide/svelte';
+  import jsPDF from 'jspdf';
+  import html2canvas from 'html2canvas';
 
   interface Note {
     id: string;
@@ -23,6 +25,8 @@
   let headerText = $state('');
   let footerText = $state('');
   let theme = $state<'light' | 'dark' | 'sepia'>('light');
+  let isExporting = $state(false);
+  let exportMethod = $state<'native' | 'print'>('native');
 
   const paperSizes = {
     a4: { width: '210mm', height: '297mm', margin: '20mm' },
@@ -70,7 +74,182 @@
     return toc;
   }
 
-  function exportPDF() {
+  // Paper dimensions in mm for jsPDF
+  const paperDimensionsMM = {
+    a4: { width: 210, height: 297 },
+    letter: { width: 215.9, height: 279.4 },
+    legal: { width: 215.9, height: 355.6 },
+  };
+
+  async function exportPDF() {
+    if (!note) return;
+
+    if (exportMethod === 'native') {
+      await exportNativePDF();
+    } else {
+      exportPrintPDF();
+    }
+  }
+
+  async function exportNativePDF() {
+    if (!note) return;
+
+    isExporting = true;
+    toast.info('Generating PDF...');
+
+    try {
+      const fonts = fontSizes[fontSize];
+      const colors = themes[theme];
+      const htmlContent = parseMarkdown(note.content);
+      const wordCount = getWordCount(note.content);
+      const readingTime = getReadingTime(note.content);
+      const headings = extractHeadingsForTOC(note.content);
+      const tocHtml = includeTOC ? generateTOC(headings) : '';
+
+      // Create a hidden container for rendering
+      const container = document.createElement('div');
+      container.style.position = 'absolute';
+      container.style.left = '-9999px';
+      container.style.top = '0';
+      container.style.width = orientation === 'portrait'
+        ? `${paperDimensionsMM[paperSize].width * 3.78}px`  // Convert mm to px (96dpi / 25.4)
+        : `${paperDimensionsMM[paperSize].height * 3.78}px`;
+      container.style.padding = '40px';
+      container.style.background = colors.bg;
+      container.style.fontFamily = 'Georgia, "Times New Roman", serif';
+      container.style.fontSize = fonts.body;
+      container.style.lineHeight = '1.8';
+      container.style.color = colors.text;
+
+      // Build HTML content
+      let html = '';
+
+      if (headerText) {
+        html += `<div style="font-size: 10pt; color: ${colors.text}88; border-bottom: 1px solid ${colors.border}; padding-bottom: 8px; margin-bottom: 20px;">${headerText}</div>`;
+      }
+
+      if (includeTitle) {
+        html += `<h1 style="font-size: ${fonts.h1}; font-weight: 700; margin: 0 0 0.5em; border-bottom: 3px solid ${colors.accent}; padding-bottom: 0.3em;">${note.title || 'Untitled'}</h1>`;
+      }
+
+      if (includeMeta) {
+        html += `<div style="font-size: 10pt; color: ${colors.text}99; margin-bottom: 2em; padding-bottom: 1em; border-bottom: 1px solid ${colors.border};">`;
+        html += `<span style="margin-right: 1.5em;">${new Date(note.updated_at).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>`;
+        html += `<span style="margin-right: 1.5em;">${wordCount} words</span>`;
+        html += `<span>${readingTime} min read</span>`;
+        if (note.tags && note.tags.length > 0) {
+          html += `<div style="margin-top: 0.5em;">${note.tags.map(t => `<span style="display: inline-block; background: ${colors.accent}22; color: ${colors.accent}; padding: 2px 8px; border-radius: 12px; font-size: 9pt; margin-right: 6px;">#${t}</span>`).join('')}</div>`;
+        }
+        html += '</div>';
+      }
+
+      if (tocHtml) {
+        html += `<div style="background: ${colors.codeBg}; padding: 1em 1.5em; border-radius: 8px; margin-bottom: 2em;">${tocHtml}</div>`;
+      }
+
+      // Add the main content with styled markdown
+      html += `<div class="markdown-content" style="
+        --code-bg: ${colors.codeBg};
+        --accent: ${colors.accent};
+        --border: ${colors.border};
+        --text: ${colors.text};
+      ">${htmlContent}</div>`;
+
+      if (footerText) {
+        html += `<div style="font-size: 10pt; color: ${colors.text}88; border-top: 1px solid ${colors.border}; padding-top: 8px; margin-top: 20px;">${footerText}</div>`;
+      }
+
+      container.innerHTML = `
+        <style>
+          .markdown-content h1 { font-size: ${fonts.h1}; margin-top: 1.5em; margin-bottom: 0.5em; }
+          .markdown-content h2 { font-size: ${fonts.h2}; margin-top: 1.5em; margin-bottom: 0.5em; border-bottom: 1px solid ${colors.border}; padding-bottom: 0.2em; }
+          .markdown-content h3 { font-size: ${fonts.h3}; margin-top: 1.2em; margin-bottom: 0.5em; }
+          .markdown-content p { margin: 1em 0; text-align: justify; }
+          .markdown-content code { background: ${colors.codeBg}; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; font-family: monospace; color: ${colors.accent}; }
+          .markdown-content pre { background: ${colors.codeBg}; padding: 16px; border-radius: 6px; overflow-x: auto; font-size: 0.85em; border-left: 4px solid ${colors.accent}; }
+          .markdown-content pre code { background: none; padding: 0; color: ${colors.text}; }
+          .markdown-content blockquote { border-left: 4px solid ${colors.accent}; margin: 1.5em 0; padding: 0.5em 0 0.5em 1.5em; color: ${colors.text}cc; font-style: italic; background: ${colors.codeBg}66; border-radius: 0 6px 6px 0; }
+          .markdown-content table { border-collapse: collapse; width: 100%; margin: 1.5em 0; }
+          .markdown-content th, .markdown-content td { border: 1px solid ${colors.border}; padding: 10px 14px; text-align: left; }
+          .markdown-content th { background: ${colors.codeBg}; font-weight: 600; }
+          .markdown-content ul, .markdown-content ol { margin: 1em 0; padding-left: 2em; }
+          .markdown-content li { margin: 0.5em 0; }
+          .markdown-content a { color: ${colors.accent}; text-decoration: none; }
+          .markdown-content img { max-width: 100%; height: auto; border-radius: 6px; margin: 1em 0; }
+          .markdown-content hr { border: none; border-top: 2px solid ${colors.border}; margin: 2em 0; }
+        </style>
+        ${html}
+      `;
+
+      document.body.appendChild(container);
+
+      // Wait for images to load
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Render to canvas
+      const canvas = await html2canvas(container, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: colors.bg,
+      });
+
+      document.body.removeChild(container);
+
+      // Create PDF
+      const dims = paperDimensionsMM[paperSize];
+      const pdfWidth = orientation === 'portrait' ? dims.width : dims.height;
+      const pdfHeight = orientation === 'portrait' ? dims.height : dims.width;
+
+      const pdf = new jsPDF({
+        orientation: orientation === 'portrait' ? 'p' : 'l',
+        unit: 'mm',
+        format: paperSize,
+      });
+
+      const imgWidth = pdfWidth - 20; // 10mm margin on each side
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // Handle multi-page content
+      const pageHeight = pdfHeight - 20; // 10mm margin top and bottom
+      let heightLeft = imgHeight;
+      let position = 10; // Start 10mm from top
+
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + 10;
+        pdf.addPage();
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // Save the PDF using Tauri dialog
+      const { save } = await import('@tauri-apps/plugin-dialog');
+      const { writeFile } = await import('@tauri-apps/plugin-fs');
+
+      const fileName = `${(note.title || 'untitled').replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
+      const filePath = await save({
+        defaultPath: fileName,
+        filters: [{ name: 'PDF', extensions: ['pdf'] }],
+      });
+
+      if (filePath) {
+        const pdfBlob = pdf.output('arraybuffer');
+        await writeFile(filePath, new Uint8Array(pdfBlob));
+        toast.success(`PDF saved to ${filePath}`);
+        close();
+      }
+    } catch (error) {
+      console.error('PDF export error:', error);
+      toast.error('Failed to export PDF. Try using Print mode instead.');
+    } finally {
+      isExporting = false;
+    }
+  }
+
+  function exportPrintPDF() {
     if (!note) return;
 
     const paper = paperSizes[paperSize];
@@ -518,6 +697,27 @@
               >Sepia</button>
             </div>
           </div>
+
+          <div class="option-group">
+            <label class="option-label">Export Method</label>
+            <div class="option-buttons">
+              <button
+                class="option-btn"
+                class:active={exportMethod === 'native'}
+                onclick={() => exportMethod = 'native'}
+                title="Save directly to file"
+              >
+                <FileDown size={14} style="margin-right: 4px; vertical-align: middle;" />
+                Save to File
+              </button>
+              <button
+                class="option-btn"
+                class:active={exportMethod === 'print'}
+                onclick={() => exportMethod = 'print'}
+                title="Open print dialog"
+              >Print Dialog</button>
+            </div>
+          </div>
         </div>
 
         <div class="toggles">
@@ -556,9 +756,15 @@
       </div>
 
       <footer class="modal-footer">
-        <button class="btn-secondary" onclick={close}>Cancel</button>
-        <button class="btn-primary" onclick={exportPDF}>
-          Export PDF
+        <button class="btn-secondary" onclick={close} disabled={isExporting}>Cancel</button>
+        <button class="btn-primary" onclick={exportPDF} disabled={isExporting}>
+          {#if isExporting}
+            <Loader2 size={16} class="spin" style="margin-right: 6px; animation: spin 1s linear infinite;" />
+            Generating...
+          {:else}
+            <FileDown size={16} style="margin-right: 6px;" />
+            {exportMethod === 'native' ? 'Save PDF' : 'Print PDF'}
+          {/if}
         </button>
       </footer>
     </div>
@@ -805,9 +1011,23 @@
   .btn-primary {
     background: var(--accent);
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .btn-primary:hover {
+  .btn-primary:hover:not(:disabled) {
     opacity: 0.9;
+  }
+
+  .btn-primary:disabled,
+  .btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 </style>
