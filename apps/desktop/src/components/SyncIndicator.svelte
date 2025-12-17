@@ -1,6 +1,7 @@
 <script lang="ts">
   import { syncStore } from '$lib/stores';
   import { toast } from '$lib/toast';
+  import { AlertCircle, RefreshCw, Cloud, Upload, Check, ArrowDown, ArrowUp } from '@lucide/svelte';
 
   let showDetails = $state(false);
 
@@ -67,15 +68,15 @@
   >
     <span class="sync-icon" class:syncing={syncStore.isSyncing}>
       {#if syncStore.hasError}
-        !
+        <AlertCircle size={14} />
       {:else if syncStore.isSyncing}
-        ↻
+        <RefreshCw size={14} />
       {:else if !syncStore.isConfigured}
-        Cloud
+        <Cloud size={14} />
       {:else if syncStore.pendingChanges > 0}
-        ↑
+        <Upload size={14} />
       {:else}
-        ✓
+        <Check size={14} />
       {/if}
     </span>
     <span class="sync-status" style:color={getStatusColor()}>
@@ -112,8 +113,8 @@
         <div class="detail-section">
           <span class="detail-subtitle">Last sync:</span>
           <div class="sync-stats">
-            <span>↓ {syncStore.lastResult.pulled.notes + syncStore.lastResult.pulled.notebooks} pulled</span>
-            <span>↑ {syncStore.lastResult.pushed.notes + syncStore.lastResult.pushed.notebooks} pushed</span>
+            <span><ArrowDown size={12} /> {syncStore.lastResult.pulled.notes + syncStore.lastResult.pulled.notebooks} pulled</span>
+            <span><ArrowUp size={12} /> {syncStore.lastResult.pushed.notes + syncStore.lastResult.pushed.notebooks} pushed</span>
           </div>
         </div>
       {/if}
@@ -154,10 +155,12 @@
   }
 
   .sync-icon {
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .sync-icon.syncing {
+  .sync-icon.syncing :global(svg) {
     animation: spin 1s linear infinite;
   }
 
@@ -235,6 +238,12 @@
     margin-top: 4px;
     font-size: 11px;
     color: var(--text-secondary);
+  }
+
+  .sync-stats span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
   .detail-error {

@@ -22,6 +22,7 @@
   import { notesStore, appStore, syncStore } from '$lib/stores';
   import { shortcuts, isMac } from '$lib/shortcuts';
   import { toast } from '$lib/toast';
+  import { Search, FileText, Command, Sun, Moon, Target, Keyboard, ArrowLeft, ArrowRight } from '@lucide/svelte';
 
   let settingsOpen = $state(false);
   let conflictsOpen = $state(false);
@@ -377,7 +378,7 @@
               disabled={!notesStore.canGoBack()}
               title="Go back (⌘[)"
             >
-              ←
+              <ArrowLeft size={18} />
             </button>
             <button
               class="nav-btn"
@@ -385,7 +386,7 @@
               disabled={!notesStore.canGoForward()}
               title="Go forward (⌘])"
             >
-              →
+              <ArrowRight size={18} />
             </button>
           </div>
           <SearchBar />
@@ -395,35 +396,39 @@
               onclick={() => globalSearchOpen = true}
               title="Global search (⌘⇧F)"
             >
-              🔎
+              <Search size={18} />
             </button>
             <button
               class="header-btn"
               onclick={() => templatesOpen = true}
               title="New from template (⌘⇧N)"
             >
-              📝
+              <FileText size={18} />
             </button>
             <button
               class="header-btn"
               onclick={() => commandPaletteOpen = true}
               title="Command palette (⌘K)"
             >
-              🔍
+              <Command size={18} />
             </button>
             <button
               class="header-btn"
               onclick={() => appStore.toggleTheme()}
               title="Toggle theme"
             >
-              {appStore.theme === 'dark' ? '☀️' : '🌙'}
+              {#if appStore.theme === 'dark'}
+                <Sun size={18} />
+              {:else}
+                <Moon size={18} />
+              {/if}
             </button>
             <button
               class="header-btn"
               onclick={() => { focusMode = true; toast.success('Focus mode on - Press ⌘\\ to exit'); }}
               title="Focus mode (⌘\\)"
             >
-              🎯
+              <Target size={18} />
             </button>
             {#if !isMobile}
               <button
@@ -431,7 +436,7 @@
                 onclick={() => shortcutsOpen = true}
                 title="Keyboard shortcuts (⌘/)"
               >
-                ⌨️
+                <Keyboard size={18} />
               </button>
             {/if}
             <SyncIndicator />

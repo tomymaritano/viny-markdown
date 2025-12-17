@@ -29,7 +29,7 @@
   import { NOTE_COLORS, getNoteColor, setNoteColor, getNoteColorId, type NoteColor } from '$lib/noteColors';
   import {
     MoreHorizontal, Copy, Download, FileOutput, Clock, Scissors, Trash2, X,
-    ArrowLeft, ArrowRight, AlertTriangle, FileText
+    ArrowLeft, ArrowRight, AlertTriangle, FileText, Columns, Rows, Monitor, Mic, ChevronDown
   } from '@lucide/svelte';
 
   let titleInput: HTMLInputElement;
@@ -2602,7 +2602,7 @@
           onclick={() => viewMode = 'split'}
           title="Split view (vertical)"
         >
-          ⬓
+          <Columns size={16} />
         </button>
         <button
           class="toggle-btn"
@@ -2610,7 +2610,7 @@
           onclick={() => viewMode = 'split-horizontal'}
           title="Split view (horizontal)"
         >
-          ⬒
+          <Rows size={16} />
         </button>
         <button
           class="toggle-btn"
@@ -2626,7 +2626,7 @@
           onclick={() => { viewMode = 'presentation'; currentSlide = 0; }}
           title="Presentation mode"
         >
-          🎬
+          <Monitor size={16} />
         </button>
         <button
           class="toggle-btn"
@@ -2690,14 +2690,14 @@
               onclick={toggleDictation}
               title={isDictating ? 'Stop dictation' : 'Start voice dictation'}
             >
-              🎤
+              <Mic size={16} />
             </button>
             <button
               class="toolbar-btn dictation-settings"
               onclick={() => showDictationPanel = !showDictationPanel}
               title="Dictation settings"
             >
-              ▼
+              <ChevronDown size={14} />
             </button>
             {#if showDictationPanel}
               <div class="dictation-panel">
