@@ -377,6 +377,7 @@
               onclick={() => notesStore.goBack()}
               disabled={!notesStore.canGoBack()}
               title="Go back (⌘[)"
+              aria-label="Go back"
             >
               <ArrowLeft size={18} />
             </button>
@@ -385,6 +386,7 @@
               onclick={() => notesStore.goForward()}
               disabled={!notesStore.canGoForward()}
               title="Go forward (⌘])"
+              aria-label="Go forward"
             >
               <ArrowRight size={18} />
             </button>
@@ -395,6 +397,7 @@
               class="header-btn"
               onclick={() => globalSearchOpen = true}
               title="Global search (⌘⇧F)"
+              aria-label="Global search"
             >
               <Search size={18} />
             </button>
@@ -402,6 +405,7 @@
               class="header-btn"
               onclick={() => templatesOpen = true}
               title="New from template (⌘⇧N)"
+              aria-label="New from template"
             >
               <FileText size={18} />
             </button>
@@ -409,6 +413,7 @@
               class="header-btn"
               onclick={() => commandPaletteOpen = true}
               title="Command palette (⌘K)"
+              aria-label="Command palette"
             >
               <Command size={18} />
             </button>
@@ -416,6 +421,7 @@
               class="header-btn"
               onclick={() => appStore.toggleTheme()}
               title="Toggle theme"
+              aria-label={appStore.theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
             >
               {#if appStore.theme === 'dark'}
                 <Sun size={18} />
@@ -427,6 +433,7 @@
               class="header-btn"
               onclick={() => { focusMode = true; toast.success('Focus mode on - Press ⌘\\ to exit'); }}
               title="Focus mode (⌘\\)"
+              aria-label="Enter focus mode"
             >
               <Target size={18} />
             </button>
@@ -435,6 +442,7 @@
                 class="header-btn"
                 onclick={() => shortcutsOpen = true}
                 title="Keyboard shortcuts (⌘/)"
+                aria-label="Keyboard shortcuts"
               >
                 <Keyboard size={18} />
               </button>

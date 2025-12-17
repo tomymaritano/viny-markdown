@@ -2601,6 +2601,7 @@
           class:active={viewMode === 'split'}
           onclick={() => viewMode = 'split'}
           title="Split view (vertical)"
+          aria-label="Split view vertical"
         >
           <Columns size={16} />
         </button>
@@ -2609,6 +2610,7 @@
           class:active={viewMode === 'split-horizontal'}
           onclick={() => viewMode = 'split-horizontal'}
           title="Split view (horizontal)"
+          aria-label="Split view horizontal"
         >
           <Rows size={16} />
         </button>
@@ -2625,6 +2627,7 @@
           class:active={viewMode === 'presentation'}
           onclick={() => { viewMode = 'presentation'; currentSlide = 0; }}
           title="Presentation mode"
+          aria-label="Presentation mode"
         >
           <Monitor size={16} />
         </button>
@@ -2689,6 +2692,7 @@
               class:recording={isDictating}
               onclick={toggleDictation}
               title={isDictating ? 'Stop dictation' : 'Start voice dictation'}
+              aria-label={isDictating ? 'Stop dictation' : 'Start voice dictation'}
             >
               <Mic size={16} />
             </button>
@@ -2696,6 +2700,7 @@
               class="toolbar-btn dictation-settings"
               onclick={() => showDictationPanel = !showDictationPanel}
               title="Dictation settings"
+              aria-label="Dictation settings"
             >
               <ChevronDown size={14} />
             </button>
@@ -2703,7 +2708,7 @@
               <div class="dictation-panel">
                 <div class="dictation-header">
                   <span class="dictation-title">Voice Dictation</span>
-                  <button class="dictation-close" onclick={() => showDictationPanel = false}><X size={14} /></button>
+                  <button class="dictation-close" onclick={() => showDictationPanel = false} aria-label="Close dictation panel"><X size={14} /></button>
                 </div>
                 <div class="dictation-language">
                   <label>Language</label>
@@ -4491,12 +4496,16 @@
 
   .toolbar-btn {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     padding: 6px 10px;
     background: none;
     border: 1px solid var(--border);
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .toolbar-btn:hover {
@@ -4743,6 +4752,9 @@
   }
 
   .toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 6px 12px;
     background: none;
     border: none;

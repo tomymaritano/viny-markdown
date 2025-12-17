@@ -65,6 +65,7 @@
     onmouseleave={() => showDetails = false}
     disabled={syncStore.isSyncing}
     title="Click to sync"
+    aria-label={syncStore.isSyncing ? 'Syncing in progress' : 'Click to sync'}
   >
     <span class="sync-icon" class:syncing={syncStore.isSyncing}>
       {#if syncStore.hasError}
